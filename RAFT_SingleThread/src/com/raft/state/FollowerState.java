@@ -31,7 +31,7 @@ public class FollowerState implements IMachineContext{
 				timer.setResetTimer(true);
 				while(server.getAppendEntriesRPC()==null);
 				AppendEntriesRPC appendEntriesRPC = server.getAppendEntriesRPC();
-				
+				timer.setResetTimer(false);
 			} else if(timer.isTimeOut()) {
 				System.out.println("Context Promoted: Candidate");
 				MachineState.setState(ENodeState.CANDIDATE);

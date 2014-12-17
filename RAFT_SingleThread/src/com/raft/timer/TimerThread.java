@@ -27,7 +27,7 @@ public class TimerThread implements Runnable{
 				break;			
 			} else if(resetTimer) {
 				now = System.currentTimeMillis();
-				resetTimer = false;
+				//resetTimer = false;
 				//System.out.println("Timer Resetted");
 			}			
 		}
