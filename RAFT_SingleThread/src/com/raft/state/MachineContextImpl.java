@@ -8,24 +8,13 @@ import com.raft.rpc.AppendEntriesRPC;
 import com.raft.start.ServerNode;
 import com.raft.timer.TimerThread;
 
-public class MachineContextImpl implements IMachineContext{
+public class MachineContextImpl{
 	
 	private ENodeState nodeState;
 	
 	private Map<Integer, ServerNode> portServerMap;
-	
-	private boolean signalled = false;
-	
-	public void setSignalled(boolean signalled) {
-		this.signalled = signalled;
-	}
 
-	@Override
-	public void portServerMap(Map<Integer, ServerNode> portServerMap) {
-		this.portServerMap = portServerMap;
-	}
-	
-	@Override
+
 	public void process() {
 		
 		switch(nodeState) {
@@ -80,15 +69,5 @@ public class MachineContextImpl implements IMachineContext{
 	
 	private void processLeader() {
 		
-	}
-	
-	@Override
-	public void setState(ENodeState nodeState) {
-		this.nodeState = nodeState;
-	}
-	
-	@Override
-	public ENodeState getState() {
-		return nodeState;
 	}
 }

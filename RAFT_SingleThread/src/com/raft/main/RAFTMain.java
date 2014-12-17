@@ -37,9 +37,9 @@ public class RAFTMain {
 		
 		//Step2:
 		List<String> nodeList = new ArrayList<String>();
-		MachineState.setNodeList(nodeList);
+		MachineState.initializeMachineState(nodeList, portServerMap);
 		System.out.println("Starting Raft");
-		new Thread(new StartRaft(portServerMap)).start();		
+		new Thread(new StartRaft()).start();		
 		
 		
 		/*System.out.println("Starting server Thread "+IRaftConstants.INITIATOR_PORT1);*/
