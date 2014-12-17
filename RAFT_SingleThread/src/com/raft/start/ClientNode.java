@@ -12,9 +12,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessOrder;
+import javax.xml.stream.XMLStreamWriter;
+
 import com.raft.constants.ENodeState;
 import com.raft.rpc.AppendEntriesRPC;
-import com.raft.utils.ServerUtils;
+import com.raft.rpc.XMLGenerationRPC;
 
 public class ClientNode implements Runnable {
 
@@ -106,12 +109,31 @@ public class ClientNode implements Runnable {
 			            client.register(selector, SelectionKey.OP_WRITE);
                     }else if (key.isWritable()){
                     	client = (SocketChannel) key.channel();
-                    	ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
+                    	/**
+                    	 * <?xml version="1.0" ?><AppendEntriesRPC_Req>
+                    	 * <term>termText</term><leader_id/>
+                    	 * <entries><entry>123</entry><entry>456</entry></entries>
+                    	 * </AppendEntriesRPC_Req>
+                    	 */
+                    	XMLGenerationRPC rpc = new XMLGenerationRPC().
+                    		createDocument().
+                    			createRootElement("AppendEntriesRPC_Req").
+                    				createElement("term", new String[]{"termtext"}).
+                    				createElement("leader_id", new String[]{""}).
+                    				createRootElement("entries").
+                    					createElement("entry", new String[] {"123","456"}).
+                    				endRootElement().
+                    			endRootElement().
+                    		endDocument();
+                    	
+                    	/*ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
                     	ObjectOutputStream objStream = new ObjectOutputStream(byteArrayStream);
                     	AppendEntriesRPC appendRPC = new AppendEntriesRPC();
                     	objStream.writeObject(appendRPC);
 
-                    	client.write(ByteBuffer.wrap(byteArrayStream.toByteArray()));
+                    	client.write(ByteBuffer.wrap(byteArrayStream.toByteArray()));*/
+                    	System.out.println("client: "+new String(rpc.getXMLStringArray()));
+                    	client.write(ByteBuffer.wrap(rpc.getXMLStringArray()));
                         message =1;
                         //System.out.println(Thread.currentThread().getName()+"Message written from client "+Integer.toString(broadCastMsg));
                         // lets get ready to read.
