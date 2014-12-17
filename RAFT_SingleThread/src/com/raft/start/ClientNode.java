@@ -66,15 +66,15 @@ public class ClientNode implements Runnable {
 
 	}
 
-	private boolean startServer() {
+/*	private boolean startServer() {
 		boolean success = false;		
 		new Thread(new ServerNode(ServerUtils.creteServer(port)),"Server Thread with port "+port).start();
 		success = true;
 		this.status = ENodeState.INITIATOR;
-		/*System.out.println(Thread.currentThread().getName()
-				+ " Status of Server in port " + port + ": " + success);*/
+		System.out.println(Thread.currentThread().getName()
+				+ " Status of Server in port " + port + ": " + success);
 		return success;
-	}
+	}*/
 
 	private int broadCastMessage(String machine, int port, int broadCastMsg) {
 
