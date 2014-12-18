@@ -1,8 +1,6 @@
 package com.raft.start;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -12,24 +10,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessOrder;
-import javax.xml.stream.XMLStreamWriter;
-
 import com.raft.constants.ENodeState;
-import com.raft.rpc.AppendEntriesRPC;
 import com.raft.rpc.XMLGenerationRPC;
 import com.raft.utils.XMLUtils;
 
 public class ClientNode implements Runnable {
 
-	private int port;
 	
 	private ENodeState status;
 
 	List<Integer> bCastMsgs = new ArrayList<Integer>();
 
-	public ClientNode(int port, List<Integer> bCastMsgs) {
-		this.port = port;
+	public ClientNode(List<Integer> bCastMsgs) {
 		this.bCastMsgs = bCastMsgs;
 	}
 

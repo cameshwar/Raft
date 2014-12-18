@@ -50,6 +50,7 @@ public class XMLUtils {
 				        System.out.println(reader.getText());
 				    }
 				}
+				reader.close();
 			} catch (XMLStreamException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -1,6 +1,7 @@
 package com.raft.rpc;
 
 import java.io.ByteArrayInputStream;
+import java.io.StringReader;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -22,9 +23,9 @@ public class XMLReaderRPC implements XMLRpc{
 		this.factory = XMLUtils.getXMLInputFactory();
 	}
 	
-	public XMLReaderRPC readDocument(byte[] data) {
+	public XMLReaderRPC readDocument(String data) {
 		try {
-			this.reader = factory.createXMLStreamReader(new ByteArrayInputStream(data));
+			this.reader = factory.createXMLStreamReader(new StringReader(data));
 		} catch (XMLStreamException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,8 +1,6 @@
 package com.raft.start;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
@@ -12,14 +10,12 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-
 import com.raft.constants.IRaftConstants;
 import com.raft.rpc.AppendEntriesRPC;
 import com.raft.rpc.RequestVotesRPC;
 import com.raft.rpc.XMLReaderRPC;
 import com.raft.utils.XMLUtils;
+import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
 public class ServerNode implements Runnable {
 	
@@ -109,14 +105,23 @@ public class ServerNode implements Runnable {
 						
 						//ReadableByteChannel channel = Channels.newChannel(client.socket().getInputStream());
 						ByteBuffer buffer = ByteBuffer.allocate(1024);
-						byte[] data = new byte[1024];
+						ByteArrayBuffer data = new ByteArrayBuffer();
 						int read;
+						XMLReaderRPC readerRPC = new XMLReaderRPC();
 						while((read = client.read(buffer)) > 0) {
 							buffer.flip();
 							while(buffer.hasRemaining()) {
-								buffer.get(data, 0, read);
-							}
-						}						
+								data.write(buffer.get());
+							}							
+						}					
+						
+						if(data.size()>0) {
+							readerRPC.readDocument(data.toString());
+							XMLUtils.processRPCObject(readerRPC);
+							data.reset();
+						}
+						
+						data.close();
 						
 						/*ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
 						ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
@@ -126,15 +131,10 @@ public class ServerNode implements Runnable {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}*/
-						if(read>0) {
-						XMLReaderRPC readerRPC = new XMLReaderRPC().readDocument(data);
-						//System.out.println("server "+new String(data));
-						XMLUtils.processRPCObject(readerRPC);
-						}
 						
 						this.isReadyToRead = false;
 						this.isReadytoWrite = false;
-						System.out.println("Data Read");
+						System.out.println("Data Read");						
 						client.socket().close();
 					} else if(key.isWritable()) {
 						this.isReadytoWrite = true;

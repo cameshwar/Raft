@@ -45,7 +45,7 @@ public class RAFTMain {
 		/*System.out.println("Starting server Thread "+IRaftConstants.INITIATOR_PORT1);*/
 		List<Integer> bCastMsgs1 = new ArrayList<Integer>();
 		bCastMsgs1.add(IRaftConstants.FOLLOWER_PORT);
-		new Thread(new ClientNode(IRaftConstants.FOLLOWER_PORT, bCastMsgs1),"Thread 1").start();
+		new Thread(new ClientNode(bCastMsgs1),"Thread 1").start();
 		/*
 		System.out.println("Starting server Thread "+IRaftConstants.INITIATOR_PORT2);
 		List<Integer> bCastMsgs2 = new ArrayList<Integer>();
