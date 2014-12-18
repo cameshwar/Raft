@@ -1,10 +1,14 @@
 package com.raft.machinestate;
 
-import com.raft.constants.ENodeState;
+import com.raft.constants.EMachineState;
+import com.raft.constants.EServerState;
 import com.raft.constants.IRaftConstants;
+import com.raft.constants.MachineState;
 import com.raft.rpc.AppendEntriesRPC;
-import com.raft.start.ServerNode;
+import com.raft.serverstate.ReadableServerState;
+import com.raft.start.ServerStateNode;
 import com.raft.timer.TimerThread;
+import com.raft.utils.ServerUtils;
 
 public class FollowerState implements IMachineContext{
 	
@@ -25,16 +29,18 @@ public class FollowerState implements IMachineContext{
 		TimerThread timer = new TimerThread(IRaftConstants.FOLLOWER_TIMEOUT);
 		new Thread(timer,"Timer Follower").start();
 		
-		ServerNode server = MachineState.portServerMap.get(IRaftConstants.FOLLOWER_PORT);
+		ServerStateNode server = MachineState.portServerMap.get(IRaftConstants.FOLLOWER_PORT);		
 		while(true) {
-			if(server.isReadyToRead() && !server.isReadytoWrite()) {
+			if(MachineState.serverState == EServerState.READ) {
+				ReadableServerState readableServer = (ReadableServerState) ServerUtils.getServerContext();
+				System.out.println("Reset timer");
 				timer.setResetTimer(true);
-				while(server.getAppendEntriesRPC()==null);
+				while(readableServer.getAppendEntriesRPC()==null);
 				AppendEntriesRPC appendEntriesRPC = server.getAppendEntriesRPC();
 				timer.setResetTimer(false);
 			} else if(timer.isTimeOut()) {
 				System.out.println("Context Promoted: Candidate");
-				MachineState.setState(ENodeState.CANDIDATE);
+				MachineState.setMachineState(EMachineState.CANDIDATE);
 				break;
 			}			 
 		}

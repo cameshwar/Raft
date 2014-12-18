@@ -1,6 +1,7 @@
 package com.raft.machinestate;
 
-import com.raft.constants.ENodeState;
+import com.raft.constants.EMachineState;
+import com.raft.constants.MachineState;
 
 
 
@@ -20,7 +21,7 @@ public class InitiatorState implements IMachineContext{
 	@Override
 	public void process() {
 		System.out.println("Context: Initiator");
-		MachineState.setState(ENodeState.FOLLOWER);		
+		MachineState.setMachineState(EMachineState.FOLLOWER);		
 	}
 	
 }

@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.raft.constants.ENodeState;
+import com.raft.constants.EMachineState;
 import com.raft.rpc.XMLGenerationRPC;
 
 public class ClientNode implements Runnable {
 
 	
-	private ENodeState status;
+	private EMachineState status;
 
 	List<Integer> bCastMsgs = new ArrayList<Integer>();
 
@@ -48,8 +48,8 @@ public class ClientNode implements Runnable {
 				continue;
 		}
 		
-		if(this.status == ENodeState.INITIATOR) {
-			this.status = ENodeState.FOLLOWER;
+		if(this.status == EMachineState.INITIATOR) {
+			this.status = EMachineState.FOLLOWER;
 		}
 
 		// Step 3: Start the node in FOLLOWER mode.

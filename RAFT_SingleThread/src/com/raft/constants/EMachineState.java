@@ -2,7 +2,7 @@ package com.raft.constants;
 
 import com.raft.machinestate.IMachineContext;
 
-public enum ENodeState {
+public enum EMachineState {
 	INITIATOR {
 		@Override
 		public boolean process(IMachineContext machineContext) {

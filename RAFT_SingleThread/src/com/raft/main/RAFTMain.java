@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.raft.constants.IRaftConstants;
-import com.raft.machinestate.MachineState;
+import com.raft.constants.MachineState;
 import com.raft.start.ClientNode;
 import com.raft.start.ServerNode;
+import com.raft.start.ServerStateNode;
 import com.raft.start.StartRaft;
 import com.raft.start.StartServer;
 import com.raft.utils.ServerUtils;
@@ -27,11 +28,18 @@ public class RAFTMain {
 		 * 
 		 */
 		//Step1:
-		Map<Integer, ServerNode> portServerMap = new HashMap<Integer, ServerNode>();		
+		/*Map<Integer, ServerNode> portServerMap = new HashMap<Integer, ServerNode>();		
 		portServerMap.put(IRaftConstants.INITIATOR_PORT, new ServerNode(ServerUtils.creteServer(IRaftConstants.INITIATOR_PORT)));
 		portServerMap.put(IRaftConstants.FOLLOWER_PORT, new ServerNode(ServerUtils.creteServer(IRaftConstants.FOLLOWER_PORT)));
 		portServerMap.put(IRaftConstants.CANDIDATE_PORT, new ServerNode(ServerUtils.creteServer(IRaftConstants.CANDIDATE_PORT)));
 		portServerMap.put(IRaftConstants.LEADER_PORT, new ServerNode(ServerUtils.creteServer(IRaftConstants.LEADER_PORT)));
+		System.out.println("Starting Server ");
+		StartServer.getServer().startServer(portServerMap);*/
+		Map<Integer, ServerStateNode> portServerMap = new HashMap<Integer, ServerStateNode>();		
+		portServerMap.put(IRaftConstants.INITIATOR_PORT, new ServerStateNode(ServerUtils.creteServer(IRaftConstants.INITIATOR_PORT)));
+		portServerMap.put(IRaftConstants.FOLLOWER_PORT, new ServerStateNode(ServerUtils.creteServer(IRaftConstants.FOLLOWER_PORT)));
+		portServerMap.put(IRaftConstants.CANDIDATE_PORT, new ServerStateNode(ServerUtils.creteServer(IRaftConstants.CANDIDATE_PORT)));
+		portServerMap.put(IRaftConstants.LEADER_PORT, new ServerStateNode(ServerUtils.creteServer(IRaftConstants.LEADER_PORT)));
 		System.out.println("Starting Server ");
 		StartServer.getServer().startServer(portServerMap);
 		
