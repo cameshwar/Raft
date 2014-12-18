@@ -14,7 +14,6 @@ import com.raft.constants.IRaftConstants;
 import com.raft.rpc.AppendEntriesRPC;
 import com.raft.rpc.RequestVotesRPC;
 import com.raft.rpc.XMLReaderRPC;
-import com.raft.utils.XMLUtils;
 import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
 public class ServerNode implements Runnable {
@@ -106,9 +105,8 @@ public class ServerNode implements Runnable {
 						//ReadableByteChannel channel = Channels.newChannel(client.socket().getInputStream());
 						ByteBuffer buffer = ByteBuffer.allocate(1024);
 						ByteArrayBuffer data = new ByteArrayBuffer();
-						int read;
 						XMLReaderRPC readerRPC = new XMLReaderRPC();
-						while((read = client.read(buffer)) > 0) {
+						while(client.read(buffer) > 0) {
 							buffer.flip();
 							while(buffer.hasRemaining()) {
 								data.write(buffer.get());
@@ -117,7 +115,8 @@ public class ServerNode implements Runnable {
 						
 						if(data.size()>0) {
 							readerRPC.readDocument(data.toString());
-							XMLUtils.processRPCObject(readerRPC);
+							readerRPC.processRPC();
+							this.appendEntriesRPC = new AppendEntriesRPC(readerRPC.getValueMap());
 							data.reset();
 						}
 						

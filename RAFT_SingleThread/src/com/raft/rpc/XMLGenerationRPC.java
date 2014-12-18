@@ -6,6 +6,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import com.raft.constants.IRaftConstants;
 import com.raft.utils.XMLUtils;
 
 public class XMLGenerationRPC implements XMLRpc{
@@ -21,11 +22,28 @@ public class XMLGenerationRPC implements XMLRpc{
 		this.byteArray = new ByteArrayOutputStream();
 	}
 	
+	@Override
+	public void processRPC() {
+		
+		this.
+		createDocument().
+			startDocument().
+				createRootElement(IRaftConstants.APPEND_ENTRIES_RPC).
+					createElement(IRaftConstants.TERM, new String[]{"123"}).
+						createElement(IRaftConstants.LEADER_ID, new String[]{""}).
+						createRootElement(IRaftConstants.ENTRIES).
+							createElement(IRaftConstants.ENTRY, new String[] {"123","456"}).
+						endRootElement().
+				endRootElement().
+			endDocument();
+		
+	}
+	
 	public byte[] getXMLStringArray() {
 		return byteArray.toByteArray();
 	}
 	
-	public XMLGenerationRPC createDocument() {
+	private XMLGenerationRPC createDocument() {
 		try {
 			this.writer = factory.createXMLStreamWriter(byteArray);
 		} catch (XMLStreamException e) {
@@ -35,7 +53,7 @@ public class XMLGenerationRPC implements XMLRpc{
 		return this;
 	}
 	
-	public XMLGenerationRPC startDocument() {
+	private XMLGenerationRPC startDocument() {
 		try {
 			writer.writeStartDocument();
 		} catch (XMLStreamException e) {
@@ -45,7 +63,7 @@ public class XMLGenerationRPC implements XMLRpc{
 		return this;
 	}
 	
-	public XMLGenerationRPC endDocument() {
+	private XMLGenerationRPC endDocument() {
 		try {
 			writer.writeEndDocument();
 			writer.flush();
@@ -57,18 +75,18 @@ public class XMLGenerationRPC implements XMLRpc{
 		return this;
 	}
 
-	public XMLGenerationRPC createRootElement(String elementValue) {
+	private XMLGenerationRPC createRootElement(String elementValue) {
 		createStartElement(elementValue);
 		return this;
 	}
 	
-	public XMLGenerationRPC endRootElement() {
+	private XMLGenerationRPC endRootElement() {
 		createEndElement();
 		return this;
 	}
 	
 	
-	public XMLGenerationRPC createElement(String elementName, String value[]) {
+	private XMLGenerationRPC createElement(String elementName, String value[]) {
 		for(int i =0; i< value.length; i++)
 			createStartElement(elementName).createTextElement(value[i]).createEndElement();
 		return this;

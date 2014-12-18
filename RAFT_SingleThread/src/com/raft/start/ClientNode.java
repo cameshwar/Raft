@@ -12,7 +12,6 @@ import java.util.List;
 
 import com.raft.constants.ENodeState;
 import com.raft.rpc.XMLGenerationRPC;
-import com.raft.utils.XMLUtils;
 
 public class ClientNode implements Runnable {
 
@@ -109,7 +108,7 @@ public class ClientNode implements Runnable {
                     	 * </AppendEntriesRPC_Req>
                     	 */
                     	XMLGenerationRPC rpc = new XMLGenerationRPC();
-                    	XMLUtils.processRPCObject(rpc);
+                    	rpc.processRPC();
                     		
                     	
                     	/*ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();

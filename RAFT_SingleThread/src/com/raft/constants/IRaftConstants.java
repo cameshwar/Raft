@@ -29,5 +29,17 @@ public interface IRaftConstants {
 	public static final long LEADER_TIMEOUT = 10000L;
 	
 	public static final long GRACE_TIMEOUT = 2000L;
+	
+	public static final String APPEND_ENTRIES_RPC = "AppendEntriesRPC_Req";
+	
+	public static final String TERM = "term";
+	
+	public static final String LEADER_ID = "leader_id";
+	
+	public static final String ENTRIES = "entries";
+	
+	public static final String ENTRY = "entry";
+	
+	public static final String REQUEST_VOTES_RPC = "RequestVotesRPC_Req";
 
 }
