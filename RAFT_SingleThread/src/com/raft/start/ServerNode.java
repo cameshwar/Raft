@@ -19,6 +19,7 @@ import com.raft.constants.IRaftConstants;
 import com.raft.rpc.AppendEntriesRPC;
 import com.raft.rpc.RequestVotesRPC;
 import com.raft.rpc.XMLReaderRPC;
+import com.raft.utils.XMLUtils;
 
 public class ServerNode implements Runnable {
 	
@@ -127,21 +128,8 @@ public class ServerNode implements Runnable {
 						}*/
 						if(read>0) {
 						XMLReaderRPC readerRPC = new XMLReaderRPC().readDocument(data);
-						System.out.println("server "+new String(data));
-						XMLStreamReader reader = readerRPC.getReader();
-						try {
-							while(reader.hasNext()){
-								reader.next();
-							    /*if(reader.getEventType() == XMLStreamReader.START_ELEMENT){
-							        System.out.println(reader.getLocalName());
-							    } else */if(reader.getEventType() == XMLStreamReader.CHARACTERS){
-							        System.out.println(reader.getText());
-							    }
-							}
-						} catch (XMLStreamException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						//System.out.println("server "+new String(data));
+						XMLUtils.processRPCObject(readerRPC);
 						}
 						
 						this.isReadyToRead = false;

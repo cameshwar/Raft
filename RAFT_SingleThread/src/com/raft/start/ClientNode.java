@@ -18,6 +18,7 @@ import javax.xml.stream.XMLStreamWriter;
 import com.raft.constants.ENodeState;
 import com.raft.rpc.AppendEntriesRPC;
 import com.raft.rpc.XMLGenerationRPC;
+import com.raft.utils.XMLUtils;
 
 public class ClientNode implements Runnable {
 
@@ -115,16 +116,9 @@ public class ClientNode implements Runnable {
                     	 * <entries><entry>123</entry><entry>456</entry></entries>
                     	 * </AppendEntriesRPC_Req>
                     	 */
-                    	XMLGenerationRPC rpc = new XMLGenerationRPC().
-                    		createDocument().
-                    			createRootElement("AppendEntriesRPC_Req").
-                    				createElement("term", new String[]{"termtext"}).
-                    				createElement("leader_id", new String[]{""}).
-                    				createRootElement("entries").
-                    					createElement("entry", new String[] {"123","456"}).
-                    				endRootElement().
-                    			endRootElement().
-                    		endDocument();
+                    	XMLGenerationRPC rpc = new XMLGenerationRPC();
+                    	XMLUtils.processRPCObject(rpc);
+                    		
                     	
                     	/*ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
                     	ObjectOutputStream objStream = new ObjectOutputStream(byteArrayStream);

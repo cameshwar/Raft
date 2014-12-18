@@ -8,7 +8,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import com.raft.utils.XMLUtils;
 
-public class XMLReaderRPC {
+public class XMLReaderRPC implements XMLRpc{
 	
 	private XMLInputFactory factory;
 	

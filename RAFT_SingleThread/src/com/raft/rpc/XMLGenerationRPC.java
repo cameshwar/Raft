@@ -8,14 +8,14 @@ import javax.xml.stream.XMLStreamWriter;
 
 import com.raft.utils.XMLUtils;
 
-public class XMLGenerationRPC {
+public class XMLGenerationRPC implements XMLRpc{
 	
 	private XMLOutputFactory factory = null;
 	
 	private XMLStreamWriter writer;
 	
 	private ByteArrayOutputStream byteArray;
-
+	
 	public XMLGenerationRPC() {
 		this.factory = XMLUtils.getXMLOutputFactory();
 		this.byteArray = new ByteArrayOutputStream();
