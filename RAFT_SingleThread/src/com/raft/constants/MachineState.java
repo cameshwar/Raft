@@ -16,6 +16,10 @@ public class MachineState {
 	public static EServerState serverState = EServerState.ACCEPT;
 	
 	
+	public synchronized static EServerState getServerState() {
+		return serverState;
+	}
+
 	public static void initializeMachineState(List<String> nodeList, Map<Integer, ServerStateNode> portServerMap) {
 		MachineState.nodeList = nodeList;
 		MachineState.portServerMap = portServerMap;

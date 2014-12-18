@@ -29,12 +29,15 @@ public class FollowerState implements IMachineContext{
 		TimerThread timer = new TimerThread(IRaftConstants.FOLLOWER_TIMEOUT);
 		new Thread(timer,"Timer Follower").start();
 		
-		ServerStateNode server = MachineState.portServerMap.get(IRaftConstants.FOLLOWER_PORT);		
+		ServerStateNode server = MachineState.portServerMap.get(IRaftConstants.FOLLOWER_PORT);
+		ReadableServerState readableServer = null;
 		while(true) {
-			if(MachineState.serverState == EServerState.READ) {
-				ReadableServerState readableServer = (ReadableServerState) ServerUtils.getServerContext();
-				System.out.println("Reset timer");
-				timer.setResetTimer(true);
+			if(MachineState.getServerState() == EServerState.READ)
+				readableServer = (ReadableServerState) ServerUtils.getServerContext();
+			else
+				continue;
+			if(readableServer.isReading()) {								
+				timer.setResetTimer(true);	
 				while(readableServer.getAppendEntriesRPC()==null);
 				AppendEntriesRPC appendEntriesRPC = server.getAppendEntriesRPC();
 				timer.setResetTimer(false);

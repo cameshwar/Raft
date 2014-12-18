@@ -21,6 +21,12 @@ public class ReadableServerState implements IServerStateContext{
 	
 	private AppendEntriesRPC appendEntriesRPC;
 	
+	private boolean reading = false;
+	
+	public boolean isReading() {
+		return reading;
+	}
+
 	public AppendEntriesRPC getAppendEntriesRPC() {
 		return appendEntriesRPC;
 	}
@@ -55,26 +61,32 @@ public class ReadableServerState implements IServerStateContext{
 				ByteArrayBuffer data = new ByteArrayBuffer();
 				XMLReaderRPC readerRPC = new XMLReaderRPC();
 				while(client.read(buffer) > 0) {
+					this.reading = true;
 					buffer.flip();
 					while(buffer.hasRemaining()) {
 						data.write(buffer.get());
 					}							
-				}					
-				
-				if(data.size()>0) {
+				}
+				if(data.size()>0) {					
 					readerRPC.readDocument(data.toString());
 					readerRPC.processRPC();
 					System.out.println("RPC Processed");
 					this.appendEntriesRPC = new AppendEntriesRPC(readerRPC.getValueMap());
 					System.out.println("RPC Obj Created");
-					data.reset();
-					MachineState.setServerState(EServerState.ACCEPT);
+					data.reset();					
+					key.interestOps(SelectionKey.OP_WRITE);				
+				
+					MachineState.setServerState(EServerState.WRITE);
+				
+					data.close();			
+				
+					System.out.println("Data Read");
+					this.appendEntriesRPC = null;
+					this.reading = false;
 				}
-				
-				data.close();			
-				
-				System.out.println("Data Read");						
-				client.socket().close();
+				if(MachineState.serverState!=EServerState.READ)
+					break;
+				//client.socket().close();				
 			}
 			if(MachineState.serverState!=EServerState.READ)
 				break;
