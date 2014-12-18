@@ -122,15 +122,6 @@ public class ServerNode implements Runnable {
 						
 						data.close();
 						
-						/*ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
-						ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-						try {
-							this.appendEntriesRPC = (AppendEntriesRPC)objectInputStream.readObject();
-						} catch (ClassNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}*/
-						
 						this.isReadyToRead = false;
 						this.isReadytoWrite = false;
 						System.out.println("Data Read");						

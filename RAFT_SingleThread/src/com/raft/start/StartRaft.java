@@ -1,6 +1,6 @@
 package com.raft.start;
 
-import com.raft.state.MachineState;
+import com.raft.machinestate.MachineState;
 import com.raft.utils.MachineContextUtils;
 
 

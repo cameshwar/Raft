@@ -1,4 +1,4 @@
-package com.raft.state;
+package com.raft.machinestate;
 
 import java.util.List;
 import java.util.Map;
@@ -9,9 +9,12 @@ import com.raft.start.ServerNode;
 public class MachineState {
 	public static ENodeState nodeState = ENodeState.INITIATOR;
 	
-	public static List<String> nodeList;
+	private static List<String> nodeList;
 	
 	public static Map<Integer, ServerNode> portServerMap;
+	
+	
+	
 	
 	public static void initializeMachineState(List<String> nodeList, Map<Integer, ServerNode> portServerMap) {
 		MachineState.nodeList = nodeList;

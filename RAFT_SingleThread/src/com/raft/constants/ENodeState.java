@@ -1,6 +1,6 @@
 package com.raft.constants;
 
-import com.raft.state.IMachineContext;
+import com.raft.machinestate.IMachineContext;
 
 public enum ENodeState {
 	INITIATOR {

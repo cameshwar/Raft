@@ -1,4 +1,4 @@
-package com.raft.state;
+package com.raft.machinestate;
 
 public class CandidateState implements IMachineContext{
 	

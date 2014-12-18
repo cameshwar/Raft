@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.raft.constants.IRaftConstants;
+import com.raft.machinestate.MachineState;
 import com.raft.start.ClientNode;
 import com.raft.start.ServerNode;
 import com.raft.start.StartRaft;
 import com.raft.start.StartServer;
-import com.raft.state.MachineState;
 import com.raft.utils.ServerUtils;
 
 public class RAFTMain {

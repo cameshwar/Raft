@@ -1,12 +1,12 @@
 package com.raft.utils;
 
 import com.raft.constants.ENodeState;
-import com.raft.state.CandidateState;
-import com.raft.state.FollowerState;
-import com.raft.state.IMachineContext;
-import com.raft.state.InitiatorState;
-import com.raft.state.LeaderState;
-import com.raft.state.MachineState;
+import com.raft.machinestate.CandidateState;
+import com.raft.machinestate.FollowerState;
+import com.raft.machinestate.IMachineContext;
+import com.raft.machinestate.InitiatorState;
+import com.raft.machinestate.LeaderState;
+import com.raft.machinestate.MachineState;
 
 public class MachineContextUtils {
 	

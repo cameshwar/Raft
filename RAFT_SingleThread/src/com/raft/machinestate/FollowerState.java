@@ -1,4 +1,4 @@
-package com.raft.state;
+package com.raft.machinestate;
 
 import com.raft.constants.ENodeState;
 import com.raft.constants.IRaftConstants;
