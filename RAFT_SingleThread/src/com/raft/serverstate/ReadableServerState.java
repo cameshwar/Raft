@@ -84,9 +84,9 @@ public class ReadableServerState implements IServerStateContext{
 					this.appendEntriesRPC = null;
 					this.reading = false;
 				}
+				//client.socket().close();
 				if(MachineState.serverState!=EServerState.READ)
-					break;
-				//client.socket().close();				
+					break;								
 			}
 			if(MachineState.serverState!=EServerState.READ)
 				break;

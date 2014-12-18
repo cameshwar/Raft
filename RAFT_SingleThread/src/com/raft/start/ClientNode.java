@@ -119,11 +119,12 @@ public class ClientNode implements Runnable {
                     	client.write(ByteBuffer.wrap(byteArrayStream.toByteArray()));*/
                     	System.out.println("client: "+new String(rpc.getXMLStringArray()));
                     	client.write(ByteBuffer.wrap(rpc.getXMLStringArray()));
-                        message =1;
+                        //message =1;
                         //System.out.println(Thread.currentThread().getName()+"Message written from client "+Integer.toString(broadCastMsg));
                         // lets get ready to read.
-                        //key.interestOps(SelectionKey.OP_READ);
+                        key.interestOps(SelectionKey.OP_READ);
                     } else if (key.isReadable()){
+                    	System.out.println("Client is reading");
                     	client = (SocketChannel) key.channel();
 						ByteBuffer buf = ByteBuffer.allocate(4);
 						buf.clear();
@@ -133,8 +134,9 @@ public class ClientNode implements Runnable {
 						byte[] data = new byte[4]; 
 						buf.get(data, 0, read);
 						message = Integer.parseInt(new String(data).trim());
+						System.out.println("Message from Server "+message);
 						//System.out.println(Thread.currentThread().getName()+"Message received from server "+message);
-						//key.interestOps(SelectionKey.OP_WRITE);
+//						/key.interestOps(SelectionKey.OP_WRITE);
                     }
 					
 				}

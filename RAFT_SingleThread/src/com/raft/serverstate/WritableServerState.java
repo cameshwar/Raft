@@ -59,6 +59,8 @@ public class WritableServerState implements IServerStateContext{
 				client.write(buf);
 				key.interestOps(SelectionKey.OP_READ);
 				MachineState.setServerState(EServerState.READ);
+				if(MachineState.serverState!=EServerState.WRITE)
+					break;
 			}
 			if(MachineState.serverState!=EServerState.WRITE)
 				break;

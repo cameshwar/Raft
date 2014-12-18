@@ -3,7 +3,6 @@ package com.raft.start;
 import java.util.Map;
 
 import com.raft.constants.MachineState;
-import com.raft.utils.MachineContextUtils;
 import com.raft.utils.ServerUtils;
 
 public class StartServer {
