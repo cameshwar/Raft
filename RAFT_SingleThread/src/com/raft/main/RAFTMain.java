@@ -8,7 +8,6 @@ import java.util.Map;
 import com.raft.constants.IRaftConstants;
 import com.raft.constants.MachineState;
 import com.raft.start.ClientNode;
-import com.raft.start.ServerNode;
 import com.raft.start.ServerStateNode;
 import com.raft.start.StartRaft;
 import com.raft.start.StartServer;

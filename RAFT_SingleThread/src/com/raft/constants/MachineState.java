@@ -3,7 +3,6 @@ package com.raft.constants;
 import java.util.List;
 import java.util.Map;
 
-import com.raft.start.ServerNode;
 import com.raft.start.ServerStateNode;
 
 public class MachineState {
