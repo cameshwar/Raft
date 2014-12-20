@@ -8,12 +8,9 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
 import com.raft.constants.EServerState;
-import com.raft.constants.IRaftConstants;
 import com.raft.constants.MachineState;
 import com.raft.rpc.AppendEntriesRPC;
-import com.raft.rpc.XMLReaderRPC;
 import com.raft.start.ServerStateNode;
-import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
 
 public class WritableServerState implements IServerStateContext{
@@ -22,9 +19,9 @@ public class WritableServerState implements IServerStateContext{
 	
 	private AppendEntriesRPC appendEntriesRPC;
 	
-	public AppendEntriesRPC getAppendEntriesRPC() {
+/*	public AppendEntriesRPC getAppendEntriesRPC() {
 		return appendEntriesRPC;
-	}
+	}*/
 	
 	private WritableServerState() {
 		// TODO Auto-generated constructor stub

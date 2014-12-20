@@ -1,6 +1,5 @@
 package com.raft.rpc;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,7 +12,7 @@ public class AppendEntriesRPC{
 	
 	private String leaderId; //machine IP
 
-	private long prevLogIndex;
+	//private long prevLogIndex;
 	
 	private int[] entries;
 	
@@ -54,7 +53,7 @@ public class AppendEntriesRPC{
 	
 	private void processObject(Map<String, Object> valueMap) {
 		Set<String> key = valueMap.keySet();
-		List<Integer> entries = new ArrayList<Integer>();
+		//List<Integer> entries = new ArrayList<Integer>();
 		for(String keyString: key) {
 			if(keyString.equals(IRaftConstants.TERM))
 				this.term = Integer.parseInt((String)valueMap.get(keyString));

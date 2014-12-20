@@ -4,14 +4,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 
-import com.raft.constants.EMachineState;
 import com.raft.constants.EServerState;
 import com.raft.constants.MachineState;
-import com.raft.machinestate.CandidateState;
-import com.raft.machinestate.FollowerState;
-import com.raft.machinestate.IMachineContext;
-import com.raft.machinestate.InitiatorState;
-import com.raft.machinestate.LeaderState;
 import com.raft.serverstate.AcceptableServerState;
 import com.raft.serverstate.IServerStateContext;
 import com.raft.serverstate.ReadableServerState;
