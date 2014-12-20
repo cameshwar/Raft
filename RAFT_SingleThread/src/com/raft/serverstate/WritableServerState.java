@@ -9,7 +9,6 @@ import java.util.Iterator;
 
 import com.raft.constants.EServerState;
 import com.raft.constants.MachineState;
-import com.raft.rpc.AppendEntriesRPC;
 import com.raft.start.ServerStateNode;
 
 
@@ -17,7 +16,7 @@ public class WritableServerState implements IServerStateContext{
 	
 	private static WritableServerState serverState = null;
 	
-	private AppendEntriesRPC appendEntriesRPC;
+	//private AppendEntriesRPC appendEntriesRPC;
 	
 /*	public AppendEntriesRPC getAppendEntriesRPC() {
 		return appendEntriesRPC;
