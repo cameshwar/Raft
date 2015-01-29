@@ -65,8 +65,9 @@ public class ReadableServerState implements IServerStateContext{
 					buffer.flip();
 					while(buffer.hasRemaining()) {
 						data.write(buffer.get());
-					}							
-				}
+					}
+					buffer.clear();
+				}				
 				if(data.size()>0) {					
 					readerRPC.readDocument(data.toString());
 					readerRPC.processRPC();

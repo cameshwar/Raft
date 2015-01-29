@@ -20,7 +20,7 @@ public class WritableServerState implements IServerStateContext{
 	
 /*	public AppendEntriesRPC getAppendEntriesRPC() {
 		return appendEntriesRPC;
-	}*/
+	}*/	
 	
 	private WritableServerState() {
 		// TODO Auto-generated constructor stub
