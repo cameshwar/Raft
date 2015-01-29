@@ -36,12 +36,15 @@ public class FollowerState implements IMachineContext{
 		while(true) {
 			if(MachineState.getServerState() == EServerState.READ)
 				readableServer = (ReadableServerState) ServerUtils.getServerContext();
-			else
+			else if(MachineState.getServerState() == EServerState.WRITE)
 				writableServer = (WritableServerState) ServerUtils.getServerContext();
+			else
+				continue;
 			if(readableServer.isReading()) {								
 				timer.setResetTimer(true);	
 				while(readableServer.getAppendEntriesRPC()==null);
 				AppendEntriesRPC appendEntriesRPC = server.getAppendEntriesRPC();
+				System.out.println("state changed");
 				MachineState.setServerState(EServerState.WRITE);
 				timer.setResetTimer(false);
 			} else if(timer.isTimeOut()) {
