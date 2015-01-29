@@ -51,12 +51,15 @@ public class WritableServerState implements IServerStateContext{
 				//ReadableByteChannel channel = Channels.newChannel(client.socket().getInputStream());
 				client = (SocketChannel) key.channel();
 				ByteBuffer buf = null;										
-				buf = ByteBuffer.wrap(Integer.toString(4).getBytes());
+				buf = ByteBuffer.wrap(Integer.toString(5).getBytes());
 				client.write(buf);
-				key.interestOps(SelectionKey.OP_READ);
-				MachineState.setServerState(EServerState.READ);
-				if(MachineState.serverState!=EServerState.WRITE)
+				//key.interestOps(SelectionKey.OP_READ);
+				//MachineState.setServerState(EServerState.READ);
+				if(MachineState.serverState!=EServerState.WRITE) {
+					System.out.println("key set");
+					key.interestOps(SelectionKey.OP_READ);
 					break;
+				}
 			}
 			if(MachineState.serverState!=EServerState.WRITE)
 				break;

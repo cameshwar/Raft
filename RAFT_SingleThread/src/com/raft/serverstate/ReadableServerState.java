@@ -74,9 +74,9 @@ public class ReadableServerState implements IServerStateContext{
 					this.appendEntriesRPC = new AppendEntriesRPC(readerRPC.getValueMap());
 					System.out.println("RPC Obj Created");
 					data.reset();					
-					key.interestOps(SelectionKey.OP_WRITE);				
+					//key.interestOps(SelectionKey.OP_WRITE);				
 				
-					MachineState.setServerState(EServerState.WRITE);
+					//MachineState.setServerState(EServerState.WRITE);
 				
 					data.close();			
 				
@@ -85,8 +85,10 @@ public class ReadableServerState implements IServerStateContext{
 					this.reading = false;
 				}
 				//client.socket().close();
-				if(MachineState.serverState!=EServerState.READ)
+				if(MachineState.serverState!=EServerState.READ) {
+					key.interestOps(SelectionKey.OP_WRITE);
 					break;								
+				}
 			}
 			if(MachineState.serverState!=EServerState.READ)
 				break;
