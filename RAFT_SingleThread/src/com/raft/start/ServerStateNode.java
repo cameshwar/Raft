@@ -10,8 +10,10 @@ import com.raft.rpc.AppendEntriesRPC;
 import com.raft.rpc.RequestVotesRPC;
 
 public class ServerStateNode{
+	
+	private String name = null;
 
-private ServerSocketChannel server;
+	private ServerSocketChannel server;
 	
 	private Selector selector;
 
@@ -43,11 +45,12 @@ private ServerSocketChannel server;
 		this.requestVotesRPC = requestVotesRPC;
 	}	
 	
-	public ServerStateNode(ServerSocketChannel server) {
+	public ServerStateNode(ServerSocketChannel server, String name) {
 		try {
 			this.server = server;
 			this.selector = Selector.open();
 			this.server.register(selector, SelectionKey.OP_ACCEPT);
+			this.name = name;
 		} catch (ClosedChannelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -55,5 +58,10 @@ private ServerSocketChannel server;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public String toString() {		
+		return name;
 	}
 }

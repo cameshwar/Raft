@@ -8,13 +8,21 @@ public interface IRaftConstants {
 	
 	public static final int INITIATOR_PORT3 = 6062;
 	
-	public static final int INITIATOR_PORT = 6061;
+	public static final int INITIATOR_READ_PORT = 6060;
 	
-	public static final int FOLLOWER_PORT = 6070;
+	public static final int INITIATOR_WRITE_PORT = 6061;
 	
-	public static final int CANDIDATE_PORT = 6080;
+	public static final int FOLLOWER_READ_PORT = 6070;
 	
-	public static final int LEADER_PORT = 6090;
+	public static final int FOLLOWER_WRITE_PORT = 6071;
+	
+	public static final int CANDIDATE_READ_PORT = 6080;
+	
+	public static final int CANDIDATE_WRITE_PORT = 6081;
+	
+	public static final int LEADER_READ_PORT = 6090;
+	
+	public static final int LEADER_WRITE_PORT = 6091;
 	
 	public static final int INITIATOR_BCAST_MSG1 = 6060;
 	

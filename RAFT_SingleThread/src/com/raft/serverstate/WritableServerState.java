@@ -10,11 +10,14 @@ import java.util.Iterator;
 import com.raft.constants.EServerState;
 import com.raft.constants.MachineState;
 import com.raft.start.ServerStateNode;
+import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
 
 public class WritableServerState implements IServerStateContext{
 	
 	private static WritableServerState serverState = null;
+	
+	private boolean ready = false;
 	
 	//private AppendEntriesRPC appendEntriesRPC;
 	
@@ -69,6 +72,17 @@ public class WritableServerState implements IServerStateContext{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+	}
+
+	@Override
+	public boolean isReady() {
+		return ready;
+	}
+
+	@Override
+	public void processData(ByteArrayBuffer buf) {
+		// TODO Auto-generated method stub
 		
 	}
 }

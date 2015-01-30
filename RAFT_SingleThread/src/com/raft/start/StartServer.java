@@ -2,7 +2,7 @@ package com.raft.start;
 
 import java.util.Map;
 
-import com.raft.constants.MachineState;
+import com.raft.constants.EServerState;
 import com.raft.utils.ServerUtils;
 
 public class StartServer {
@@ -31,7 +31,7 @@ public class StartServer {
 				
 				private void startServerState() {
 					//while(MachineState.serverState.changeServerState(ServerUtils.getServerContext(), portServerMap.get(port)));
-					ServerUtils.getServerContext().changeState(portServerMap.get(port));
+					ServerUtils.getServerContext(EServerState.ACCEPT).changeState(portServerMap.get(port));
 				}
 			}.start();
 		}

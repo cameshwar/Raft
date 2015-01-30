@@ -16,6 +16,8 @@ public class CandidateState implements IMachineContext{
 	@Override
 	public void process() {
 		// TODO Auto-generated method stub
+		System.out.println("candidate");
+		while(true);
 		
 	}
 

@@ -21,7 +21,11 @@ public class ReadableServerState implements IServerStateContext{
 	
 	private AppendEntriesRPC appendEntriesRPC;
 	
+	private boolean ready = false;
+	
 	private boolean reading = false;
+	
+	private ByteArrayBuffer readData = new ByteArrayBuffer();
 	
 	public boolean isReading() {
 		return reading;
@@ -58,47 +62,65 @@ public class ReadableServerState implements IServerStateContext{
 				
 				//ReadableByteChannel channel = Channels.newChannel(client.socket().getInputStream());
 				ByteBuffer buffer = ByteBuffer.allocate(1024);
-				ByteArrayBuffer data = new ByteArrayBuffer();
-				XMLReaderRPC readerRPC = new XMLReaderRPC();
-				while(client.read(buffer) > 0) {
-					this.reading = true;
+				//ByteArrayBuffer data = new ByteArrayBuffer();
+				//XMLReaderRPC readerRPC = new XMLReaderRPC();
+				
+				while(client.read(buffer) > 0) {					
+					this.ready = true;
 					buffer.flip();
 					while(buffer.hasRemaining()) {
-						data.write(buffer.get());
+						this.readData.write(buffer.get());
 					}
 					buffer.clear();
-				}				
-				if(data.size()>0) {					
-					readerRPC.readDocument(data.toString());
+				}
+				
+				/*if(this.readData.size()>0) {					
+					readerRPC.readDocument(this.readData.toString());
 					readerRPC.processRPC();
 					System.out.println("RPC Processed");
 					this.appendEntriesRPC = new AppendEntriesRPC(readerRPC.getValueMap());
 					System.out.println("RPC Obj Created");
-					data.reset();					
+					this.readData.reset();
 					//key.interestOps(SelectionKey.OP_WRITE);				
 				
 					//MachineState.setServerState(EServerState.WRITE);
 				
-					data.close();			
+					this.readData.close();			
 				
 					System.out.println("Data Read");
 					this.appendEntriesRPC = null;
 					this.reading = false;
-				}
+				}*/
 				//client.socket().close();
-				if(MachineState.serverState!=EServerState.READ) {
+				/*if(MachineState.serverState!=EServerState.READ) {
 					key.interestOps(SelectionKey.OP_WRITE);
 					break;								
-				}
+				}*/
 			}
-			if(MachineState.serverState!=EServerState.READ)
+			/*if(MachineState.serverState!=EServerState.READ)
+				break;*/
+			if(this.ready) {
+				System.out.println("Data");
+				//this.ready = false;
 				break;
+			}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+	}
+
+	@Override
+	public boolean isReady() {
+		return this.ready;
+	}
+
+	@Override
+	public void processData(ByteArrayBuffer buf) {
+		buf = this.readData;
+		this.ready = false;
 	}
 
 	

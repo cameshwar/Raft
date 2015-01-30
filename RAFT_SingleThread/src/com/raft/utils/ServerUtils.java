@@ -30,29 +30,29 @@ public class ServerUtils {
 		return server;
 	}
 	
-	public static IServerStateContext getServerContext() {
+	public static IServerStateContext getServerContext(EServerState state) {
 		
 		IServerStateContext serverContext = null;
-		if(MachineState.getServerState() == EServerState.ACCEPT)
+		if(state == EServerState.ACCEPT)
 			serverContext = AcceptableServerState.getServerStateContext();
-		else if(MachineState.getServerState() == EServerState.READ)
+		else if(state == EServerState.READ)
 			serverContext = ReadableServerState.getServerStateContext();
-		else if(MachineState.getServerState() == EServerState.WRITE)
+		else if(state == EServerState.WRITE)
 			serverContext = WritableServerState.getServerStateContext();
 		
 		 return serverContext;
 	}
 	
-	public static ServerStateNode getServerNode() {
+	public static ServerStateNode getServerNode(EServerState state) {
 		ServerStateNode server = null;
 		if(MachineState.nodeState == EMachineState.INITIATOR)
-			server = MachineState.portServerMap.get(IRaftConstants.INITIATOR_PORT);
+			server = MachineState.portServerMap.get(state==EServerState.READ?IRaftConstants.INITIATOR_READ_PORT:IRaftConstants.INITIATOR_WRITE_PORT);
 		else if(MachineState.nodeState == EMachineState.FOLLOWER)
-			server = MachineState.portServerMap.get(IRaftConstants.FOLLOWER_PORT);
+			server = MachineState.portServerMap.get(state==EServerState.READ?IRaftConstants.FOLLOWER_READ_PORT:IRaftConstants.FOLLOWER_WRITE_PORT);
 		else if(MachineState.nodeState == EMachineState.CANDIDATE)
-			server = MachineState.portServerMap.get(IRaftConstants.CANDIDATE_PORT);
+			server = MachineState.portServerMap.get(state==EServerState.READ?IRaftConstants.CANDIDATE_READ_PORT:IRaftConstants.CANDIDATE_WRITE_PORT);
 		else if(MachineState.nodeState == EMachineState.LEADER)
-			server = MachineState.portServerMap.get(IRaftConstants.LEADER_PORT);
+			server = MachineState.portServerMap.get(state==EServerState.READ?IRaftConstants.LEADER_READ_PORT:IRaftConstants.LEADER_WRITE_PORT);
 		return server;
 	}
 
