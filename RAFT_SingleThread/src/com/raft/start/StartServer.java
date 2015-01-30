@@ -30,7 +30,8 @@ public class StartServer {
 				}
 				
 				private void startServerState() {
-					while(MachineState.serverState.changeServerState(ServerUtils.getServerContext(), portServerMap.get(port)));
+					//while(MachineState.serverState.changeServerState(ServerUtils.getServerContext(), portServerMap.get(port)));
+					ServerUtils.getServerContext().changeState(portServerMap.get(port));
 				}
 			}.start();
 		}
