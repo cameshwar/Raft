@@ -12,6 +12,8 @@ public class MachineState {
 	
 	public static Map<Integer, ServerStateNode> portServerMap;
 	
+	public static List<String> serverList;
+	
 	public static EServerState serverState = EServerState.ACCEPT;
 	
 	

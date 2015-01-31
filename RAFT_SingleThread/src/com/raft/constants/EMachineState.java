@@ -25,6 +25,7 @@ public enum EMachineState {
 		@Override
 		public boolean process(IMachineContext machineContext) {
 			machineContext.process();
+			System.out.println("Machine State: Candidate");
 			//MachineState.setState(LEADER);
 			//MachineState.setState(FOLLOWER);
 			return true;

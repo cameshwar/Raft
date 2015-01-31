@@ -78,37 +78,12 @@ public class FollowerState implements IMachineContext{
 		ByteArrayBuffer readData = new ByteArrayBuffer();
 		readableServer.processData(readData);
 		AppendEntriesRPC appendEntriesRPC = processRawData(readData);
-		//MachineState.setServerState(EServerState.WRITE);
 		writableServer.changeState(ServerUtils.getServerNode(EServerState.WRITE));
 		timer.setResetTimer(false);
 		
 		while(!timer.isTimeOut());
+		timer.setShutTimer(true);	
 		MachineState.setMachineState(EMachineState.CANDIDATE);
-		
-		
-		/*ServerStateNode server = MachineState.portServerMap.get(IRaftConstants.FOLLOWER_READ_PORT);
-		ReadableServerState readableServer = null;
-		WritableServerState writableServer = null;
-		while(true) {
-			if(MachineState.getServerState() == EServerState.READ)
-				readableServer = (ReadableServerState) ServerUtils.getServerContext(EServerState.READ);
-			else if(MachineState.getServerState() == EServerState.WRITE)
-				writableServer = (WritableServerState) ServerUtils.getServerContext(EServerState.WRITE);
-			else
-				continue;
-			if(readableServer.isReading()) {								
-				timer.setResetTimer(true);	
-				while(readableServer.getAppendEntriesRPC()==null);
-				//AppendEntriesRPC appendEntriesRPC = server.getAppendEntriesRPC();
-				System.out.println("state changed");
-				MachineState.setServerState(EServerState.WRITE);
-				timer.setResetTimer(false);
-			} else if(timer.isTimeOut()) {
-				System.out.println("Context Promoted: Candidate");
-				MachineState.setMachineState(EMachineState.CANDIDATE);
-				break;
-			}			 
-		}*/
 	}
 
 }

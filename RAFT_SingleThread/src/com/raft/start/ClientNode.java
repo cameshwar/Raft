@@ -7,8 +7,10 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.raft.constants.EMachineState;
 import com.raft.rpc.XMLGenerationRPC;
@@ -21,6 +23,8 @@ public class ClientNode implements Runnable {
 	List<Integer> bCastMsgs = new ArrayList<Integer>();
 	
 	private String serverMode = null;
+	
+	private Map<String, String> errorMap = new HashMap<String, String>();
 
 	public ClientNode(List<Integer> bCastMsgs, String serverMode) {
 		this.bCastMsgs = bCastMsgs;
@@ -36,19 +40,24 @@ public class ClientNode implements Runnable {
 		// Step 2: Broadcast msgs to other Initiators after timeout. If it
 		// receives adequate responses proceed to step 3
 		int msgcount = 0;
-		while (true) {
-			for (Integer bcastMsg : this.bCastMsgs) {
-				/*System.out.println(Thread.currentThread().getName()
-						+ " Broadcasting Msgs " + bcastMsg);*/
-				if (broadCastMessage("127.0.0.1", bcastMsg, bcastMsg) == 1)
-					msgcount++;
-				System.out.println("Count "+msgcount);
+		try {
+			while (true) {
+				for (Integer bcastMsg : this.bCastMsgs) {
+					/*System.out.println(Thread.currentThread().getName()
+							+ " Broadcasting Msgs " + bcastMsg);*/
+					if (broadCastMessage("127.0.0.1", bcastMsg, bcastMsg) == 1)
+						msgcount++;
+					System.out.println("Count "+msgcount);
+				}
+				if (msgcount > 0) {				
+					break;				
+				}
+				else
+					continue;
 			}
-			if (msgcount > 0) {				
-				break;				
-			}
-			else
-				continue;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			this.errorMap.put(e.toString(), e.getMessage());
 		}
 		
 		if(this.status == EMachineState.INITIATOR) {
@@ -74,7 +83,7 @@ public class ClientNode implements Runnable {
 		return success;
 	}*/
 
-	private int broadCastMessage(String machine, int port, int broadCastMsg) {
+	private int broadCastMessage(String machine, int port, int broadCastMsg) throws IOException {
 
 		int message = 0;
 		SocketChannel client = null;
@@ -150,7 +159,7 @@ public class ClientNode implements Runnable {
 			client.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw e;
 		}
 		return 1;
 

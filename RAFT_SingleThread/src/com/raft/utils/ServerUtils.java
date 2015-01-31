@@ -16,12 +16,12 @@ import com.raft.start.ServerStateNode;
 
 public class ServerUtils {
 	
-	public static ServerSocketChannel creteServer(int port) {
+	public static ServerSocketChannel creteServer(String hostName, int port) {
 		ServerSocketChannel server = null;
 		try {
 			server = ServerSocketChannel.open();
 			server.configureBlocking(false);
-			server.socket().bind(new InetSocketAddress(port));
+			server.socket().bind(new InetSocketAddress(hostName, port));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

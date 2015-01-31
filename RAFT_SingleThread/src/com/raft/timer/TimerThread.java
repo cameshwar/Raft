@@ -8,6 +8,8 @@ public class TimerThread implements Runnable{
 	
 	private boolean resetTimer = false;
 	
+	private boolean shutTimer = false;
+	
 	public void setResetTimer(boolean resetTimer) {
 		this.resetTimer = resetTimer;
 	}
@@ -17,20 +19,27 @@ public class TimerThread implements Runnable{
 	public TimerThread(long timer) {
 		this.timer = timer;
 	}
+	
+	public void setShutTimer(boolean shutTimer) {
+		this.shutTimer = shutTimer;
+	}
+	
 	@Override
 	public void run() {
 		long now = System.currentTimeMillis();
 		while(true) {
-			if((System.currentTimeMillis()-now) > timer) {
-				System.out.println("Signalled as timeout");
+			if(shutTimer) {
+				break;
+			} else if((System.currentTimeMillis()-now) > timer) {
+				//System.out.println("Signalled as timeout");
 				timeOut = true;
-				break;			
+				//break;			
 			} else if(resetTimer) {
 				now = System.currentTimeMillis();
 				//resetTimer = false;
 				//System.out.println("Timer Resetted");
-			}			
+			}
 		}
-		
+		System.out.println("Timer thread - Shutdown");
 	}
 }
