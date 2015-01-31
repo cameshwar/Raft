@@ -6,11 +6,18 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 
+import com.raft.constants.EServerState;
 import com.raft.rpc.AppendEntriesRPC;
 import com.raft.rpc.RequestVotesRPC;
 
 public class ServerStateNode{
 	
+	private EServerState serverState;
+	
+	public EServerState getServerState() {
+		return serverState;
+	}
+
 	private String name = null;
 
 	private ServerSocketChannel server;
@@ -24,7 +31,7 @@ public class ServerStateNode{
 	public void setSelector(Selector selector) {
 		this.selector = selector;
 	}
-
+	
 	private AppendEntriesRPC appendEntriesRPC;
 	
 	private RequestVotesRPC requestVotesRPC;
@@ -45,12 +52,13 @@ public class ServerStateNode{
 		this.requestVotesRPC = requestVotesRPC;
 	}	
 	
-	public ServerStateNode(ServerSocketChannel server, String name) {
+	public ServerStateNode(ServerSocketChannel server, String name, EServerState serverState) {
 		try {
 			this.server = server;
 			this.selector = Selector.open();
 			this.server.register(selector, SelectionKey.OP_ACCEPT);
 			this.name = name;
+			this.serverState = serverState;
 		} catch (ClosedChannelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

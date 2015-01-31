@@ -1,7 +1,5 @@
 package com.raft.machinestate;
 
-import java.io.IOException;
-
 import com.raft.constants.EMachineState;
 import com.raft.constants.EServerState;
 import com.raft.constants.IRaftConstants;
@@ -9,8 +7,6 @@ import com.raft.constants.MachineState;
 import com.raft.rpc.AppendEntriesRPC;
 import com.raft.rpc.XMLReaderRPC;
 import com.raft.serverstate.IServerStateContext;
-import com.raft.serverstate.ReadableServerState;
-import com.raft.serverstate.WritableServerState;
 import com.raft.start.ServerStateNode;
 import com.raft.timer.TimerThread;
 import com.raft.utils.ServerUtils;
@@ -71,19 +67,24 @@ public class FollowerState implements IMachineContext{
 		
 		ServerStateNode server = ServerUtils.getServerNode(EServerState.READ);
 		
-		readableServer.changeState(server);
-		System.out.println(server.toString());
-		while(!readableServer.isReady());
+		readableServer.changeState(server);		
+		while(!readableServer.isReady()) {			
+			if(timer.isTimeOut()) {
+				MachineState.setMachineState(EMachineState.CANDIDATE);
+				return;
+			}
+		}
 		timer.setResetTimer(true);
 		ByteArrayBuffer readData = new ByteArrayBuffer();
 		readableServer.processData(readData);
 		AppendEntriesRPC appendEntriesRPC = processRawData(readData);
-		System.out.println("state changed");
-		MachineState.setServerState(EServerState.WRITE);
+		//MachineState.setServerState(EServerState.WRITE);
+		writableServer.changeState(ServerUtils.getServerNode(EServerState.WRITE));
 		timer.setResetTimer(false);
 		
 		while(!timer.isTimeOut());
 		MachineState.setMachineState(EMachineState.CANDIDATE);
+		
 		
 		/*ServerStateNode server = MachineState.portServerMap.get(IRaftConstants.FOLLOWER_READ_PORT);
 		ReadableServerState readableServer = null;

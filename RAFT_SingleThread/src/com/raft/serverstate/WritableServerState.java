@@ -56,15 +56,16 @@ public class WritableServerState implements IServerStateContext{
 				ByteBuffer buf = null;										
 				buf = ByteBuffer.wrap(Integer.toString(5).getBytes());
 				client.write(buf);
+				this.ready = true;
 				//key.interestOps(SelectionKey.OP_READ);
 				//MachineState.setServerState(EServerState.READ);
-				if(MachineState.serverState!=EServerState.WRITE) {
+				/*if(MachineState.serverState!=EServerState.WRITE) {
 					System.out.println("key set");
 					key.interestOps(SelectionKey.OP_READ);
 					break;
-				}
+				}*/
 			}
-			if(MachineState.serverState!=EServerState.WRITE)
+			if(this.ready)
 				break;
 			
 		}

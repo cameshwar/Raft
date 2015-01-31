@@ -7,10 +7,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
-import com.raft.constants.EServerState;
-import com.raft.constants.MachineState;
 import com.raft.rpc.AppendEntriesRPC;
-import com.raft.rpc.XMLReaderRPC;
 import com.raft.start.ServerStateNode;
 import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
@@ -46,69 +43,77 @@ public class ReadableServerState implements IServerStateContext{
 	}
 
 	@Override
-	public void changeState(ServerStateNode server) {
-		SocketChannel client = null;
-		Selector selector = server.getSelector();
+	public void changeState(final ServerStateNode server) {
 		
-		try {
-			while(true) {
-			selector.select();
-			for (Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();) {
-				SelectionKey key = i.next(); 
-				i.remove();
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				SocketChannel client = null;
+				Selector selector = server.getSelector();
 				
-				client = (SocketChannel) key.channel();					
-				
-				
-				//ReadableByteChannel channel = Channels.newChannel(client.socket().getInputStream());
-				ByteBuffer buffer = ByteBuffer.allocate(1024);
-				//ByteArrayBuffer data = new ByteArrayBuffer();
-				//XMLReaderRPC readerRPC = new XMLReaderRPC();
-				
-				while(client.read(buffer) > 0) {					
-					this.ready = true;
-					buffer.flip();
-					while(buffer.hasRemaining()) {
-						this.readData.write(buffer.get());
+				try {
+					while(true) {
+					selector.select();
+					for (Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();) {
+						SelectionKey key = i.next(); 
+						i.remove();
+						
+						client = (SocketChannel) key.channel();					
+						
+						
+						//ReadableByteChannel channel = Channels.newChannel(client.socket().getInputStream());
+						ByteBuffer buffer = ByteBuffer.allocate(1024);
+						//ByteArrayBuffer data = new ByteArrayBuffer();
+						//XMLReaderRPC readerRPC = new XMLReaderRPC();
+						
+						while(client.read(buffer) > 0) {					
+							ready = true;
+							buffer.flip();
+							while(buffer.hasRemaining()) {
+								readData.write(buffer.get());
+							}
+							buffer.clear();
+						}
+						
+						/*if(this.readData.size()>0) {					
+							readerRPC.readDocument(this.readData.toString());
+							readerRPC.processRPC();
+							System.out.println("RPC Processed");
+							this.appendEntriesRPC = new AppendEntriesRPC(readerRPC.getValueMap());
+							System.out.println("RPC Obj Created");
+							this.readData.reset();
+							//key.interestOps(SelectionKey.OP_WRITE);				
+						
+							//MachineState.setServerState(EServerState.WRITE);
+						
+							this.readData.close();			
+						
+							System.out.println("Data Read");
+							this.appendEntriesRPC = null;
+							this.reading = false;
+						}*/
+						//client.socket().close();
+						/*if(MachineState.serverState!=EServerState.READ) {
+							key.interestOps(SelectionKey.OP_WRITE);
+							break;								
+						}*/
 					}
-					buffer.clear();
+					/*if(MachineState.serverState!=EServerState.READ)
+						break;*/
+					if(ready) {
+						System.out.println("Data");
+						//this.ready = false;
+						break;
+					}
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				
-				/*if(this.readData.size()>0) {					
-					readerRPC.readDocument(this.readData.toString());
-					readerRPC.processRPC();
-					System.out.println("RPC Processed");
-					this.appendEntriesRPC = new AppendEntriesRPC(readerRPC.getValueMap());
-					System.out.println("RPC Obj Created");
-					this.readData.reset();
-					//key.interestOps(SelectionKey.OP_WRITE);				
-				
-					//MachineState.setServerState(EServerState.WRITE);
-				
-					this.readData.close();			
-				
-					System.out.println("Data Read");
-					this.appendEntriesRPC = null;
-					this.reading = false;
-				}*/
-				//client.socket().close();
-				/*if(MachineState.serverState!=EServerState.READ) {
-					key.interestOps(SelectionKey.OP_WRITE);
-					break;								
-				}*/
 			}
-			/*if(MachineState.serverState!=EServerState.READ)
-				break;*/
-			if(this.ready) {
-				System.out.println("Data");
-				//this.ready = false;
-				break;
-			}
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		}).start();
 		
 	}
 

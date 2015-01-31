@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.raft.constants.EServerState;
 import com.raft.constants.IRaftConstants;
 import com.raft.constants.MachineState;
 import com.raft.start.ClientNode;
@@ -46,40 +47,42 @@ public class RAFTMain {
 				IRaftConstants.INITIATOR_READ_PORT,
 				new ServerStateNode(ServerUtils
 						.creteServer(IRaftConstants.INITIATOR_READ_PORT),
-						"Init Read"));
+						"Init Read", EServerState.READ));
 		portServerMap.put(
 				IRaftConstants.INITIATOR_WRITE_PORT,
 				new ServerStateNode(ServerUtils
 						.creteServer(IRaftConstants.INITIATOR_WRITE_PORT),
-						"Init write"));
+						"Init write", EServerState.WRITE));
 		portServerMap.put(
 				IRaftConstants.FOLLOWER_READ_PORT,
 				new ServerStateNode(ServerUtils
 						.creteServer(IRaftConstants.FOLLOWER_READ_PORT),
-						"Foll Read"));
+						"Foll Read", EServerState.READ));
 		portServerMap.put(
 				IRaftConstants.FOLLOWER_WRITE_PORT,
 				new ServerStateNode(ServerUtils
 						.creteServer(IRaftConstants.FOLLOWER_WRITE_PORT),
-						"Foll write"));
+						"Foll write", EServerState.WRITE));
 		portServerMap.put(
 				IRaftConstants.CANDIDATE_READ_PORT,
 				new ServerStateNode(ServerUtils
 						.creteServer(IRaftConstants.CANDIDATE_READ_PORT),
-						"Cand Read"));
+						"Cand Read", EServerState.READ));
 		portServerMap.put(
 				IRaftConstants.CANDIDATE_WRITE_PORT,
 				new ServerStateNode(ServerUtils
 						.creteServer(IRaftConstants.CANDIDATE_WRITE_PORT),
-						"Cand write"));
-		portServerMap.put(IRaftConstants.LEADER_READ_PORT, new ServerStateNode(
-				ServerUtils.creteServer(IRaftConstants.LEADER_READ_PORT),
-				"Lead Read"));
+						"Cand write", EServerState.WRITE));
+		portServerMap.put(
+				IRaftConstants.LEADER_READ_PORT, 
+				new ServerStateNode(ServerUtils.
+						creteServer(IRaftConstants.LEADER_READ_PORT),
+				"Lead Read", EServerState.READ));
 		portServerMap.put(
 				IRaftConstants.LEADER_WRITE_PORT,
 				new ServerStateNode(ServerUtils
 						.creteServer(IRaftConstants.LEADER_WRITE_PORT),
-						"Lead write"));
+						"Lead write", EServerState.WRITE));
 		System.out.println("Starting Server ");
 		StartServer.getServer().startServer(portServerMap);
 
@@ -96,7 +99,11 @@ public class RAFTMain {
 		List<Integer> bCastMsgs1 = new ArrayList<Integer>();
 		bCastMsgs1.add(IRaftConstants.FOLLOWER_READ_PORT);
 		//bCastMsgs1.add(IRaftConstants.FOLLOWER_WRITE_PORT);
-		new Thread(new ClientNode(bCastMsgs1), "Thread 1").start();
+		new Thread(new ClientNode(bCastMsgs1, "READ"), "Thread 1").start();
+		
+		List<Integer> bCastMsgs2 = new ArrayList<Integer>();
+		bCastMsgs2.add(IRaftConstants.FOLLOWER_WRITE_PORT);
+		new Thread(new ClientNode(bCastMsgs2, "WRITE"), "Thread 2").start();
 		/*
 		 * System.out.println("Starting server Thread "+IRaftConstants.
 		 * INITIATOR_PORT2); List<Integer> bCastMsgs2 = new

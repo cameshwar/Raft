@@ -19,9 +19,12 @@ public class ClientNode implements Runnable {
 	private EMachineState status;
 
 	List<Integer> bCastMsgs = new ArrayList<Integer>();
+	
+	private String serverMode = null;
 
-	public ClientNode(List<Integer> bCastMsgs) {
+	public ClientNode(List<Integer> bCastMsgs, String serverMode) {
 		this.bCastMsgs = bCastMsgs;
+		this.serverMode = serverMode;
 	}
 
 	@Override
@@ -98,7 +101,7 @@ public class ClientNode implements Runnable {
 			                client.finishConnect();
 			            }
 			            client.configureBlocking(false);
-			            client.register(selector, SelectionKey.OP_WRITE);
+			            client.register(selector, this.serverMode.equals("READ")?SelectionKey.OP_WRITE:SelectionKey.OP_READ);
                     }else if (key.isWritable()){
                     	client = (SocketChannel) key.channel();
                     	/**

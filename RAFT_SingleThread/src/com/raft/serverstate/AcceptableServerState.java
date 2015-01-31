@@ -39,7 +39,7 @@ public class AcceptableServerState implements IServerStateContext{
 		SocketChannel client = null;
 		
 		try {
-			while(true) {
+			//while(true) {
 				selector.select();
 				for (Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();) {
 					SelectionKey key = i.next(); 
@@ -49,14 +49,14 @@ public class AcceptableServerState implements IServerStateContext{
 						ServerSocketChannel acceptServer = (ServerSocketChannel)key.channel();
 						client = acceptServer.accept(); 
 						client.configureBlocking(false); 
-						client.socket().setTcpNoDelay(true); 
-						client.register(selector, SelectionKey.OP_READ);
-						MachineState.setServerState(EServerState.READ);
+						client.socket().setTcpNoDelay(true);
+						client.register(selector, server.getServerState() == EServerState.READ?SelectionKey.OP_READ:SelectionKey.OP_WRITE);
+						//MachineState.setServerState(EServerState.READ);
 					}
 				}
-				if(MachineState.serverState != EServerState.ACCEPT)
-					break;
-			}
+				/*if(MachineState.serverState != EServerState.ACCEPT)
+					break;*/
+			//}
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
