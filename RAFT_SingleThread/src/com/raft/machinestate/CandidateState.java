@@ -18,11 +18,11 @@ public class CandidateState implements IMachineContext{
 	
 	private static CandidateState candidateState = null;
 	
-	private static IServerStateContext readableServer = null;
+	private IServerStateContext readableServer = null;
 	
-	private static IServerStateContext writableServer = null;
+	private IServerStateContext writableServer = null;
 	
-	private static IServerStateContext acceptableServer = null;
+	private IServerStateContext acceptableServer = null;
 	
 	private int noOfVotes = 0;
 	
@@ -31,19 +31,20 @@ public class CandidateState implements IMachineContext{
 	
 	public static IMachineContext getMachineContext() {
 		if(candidateState == null) {
-			candidateState = new CandidateState();
-			setServerStates();
+			candidateState = new CandidateState();			
 		}
 		return candidateState;
 	}
 	
-	private static void setServerStates() {
+	private void setServerStates() {
 		readableServer = ServerUtils.getServerContext(EServerState.READ);
 		writableServer = ServerUtils.getServerContext(EServerState.WRITE);
 		acceptableServer = ServerUtils.getServerContext(EServerState.ACCEPT);
 	}
 	
 	private void broadCastMsgs() {
+		noOfVotes = 0;
+		System.out.println("Node State " + MachineState.getNodeState().toString());
 		List<String> serverList = MachineState.serverList;
 		for(int index = 0 ; index<serverList.size(); index++) {
 			final int serverIndex = index;
@@ -73,7 +74,7 @@ public class CandidateState implements IMachineContext{
 	public void process() {
 		// TODO Auto-generated method stub
 		System.out.println("candidate");
-
+		setServerStates();
 		TimerThread timer = new TimerThread(IRaftConstants.CANDIDATE_TIMEOUT);
 		new Thread(timer,"Timer Candidate").start();
 		

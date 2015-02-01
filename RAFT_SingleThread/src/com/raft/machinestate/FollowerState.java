@@ -16,9 +16,9 @@ public class FollowerState implements IMachineContext{
 	
 	private static FollowerState followerState = null;
 	
-	private static IServerStateContext readableServer = null;
+	private IServerStateContext readableServer = null;
 	
-	private static IServerStateContext writableServer = null;
+	private IServerStateContext writableServer = null;
 	
 	private FollowerState() {
 	}
@@ -26,12 +26,11 @@ public class FollowerState implements IMachineContext{
 	public static IMachineContext getMachineContext() {
 		if(followerState == null) {
 			followerState = new FollowerState();
-			setServerStates();
 		}
 		return followerState;
 	}
 	
-	private static void setServerStates() {
+	private void setServerStates() {
 		readableServer = ServerUtils.getServerContext(EServerState.READ);
 		writableServer = ServerUtils.getServerContext(EServerState.WRITE);
 	}
@@ -60,7 +59,7 @@ public class FollowerState implements IMachineContext{
 	
 	@Override
 	public void process() {
-		
+		setServerStates();
 		System.out.println("Context: Follower");
 		TimerThread timer = new TimerThread(IRaftConstants.FOLLOWER_TIMEOUT);
 		new Thread(timer,"Timer Follower").start();

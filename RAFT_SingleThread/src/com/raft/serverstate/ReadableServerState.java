@@ -75,6 +75,7 @@ public class ReadableServerState implements IServerStateContext{
 							}
 							buffer.clear();
 						}
+						System.out.println("server "+server.toString());
 						
 						/*if(this.readData.size()>0) {					
 							readerRPC.readDocument(this.readData.toString());
@@ -102,8 +103,8 @@ public class ReadableServerState implements IServerStateContext{
 					/*if(MachineState.serverState!=EServerState.READ)
 						break;*/
 					if(ready) {
-						System.out.println("Data");
-						//this.ready = false;
+						System.out.println("Data ");
+						ready = false;
 						break;
 					}
 					}

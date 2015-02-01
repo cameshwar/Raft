@@ -45,13 +45,13 @@ public class ServerUtils {
 	
 	public static ServerStateNode getServerNode(EServerState state) {
 		ServerStateNode server = null;
-		if(MachineState.nodeState == EMachineState.INITIATOR)
+		if(MachineState.getNodeState() == EMachineState.INITIATOR)
 			server = MachineState.portServerMap.get(state==EServerState.READ?IRaftConstants.INITIATOR_READ_PORT:IRaftConstants.INITIATOR_WRITE_PORT);
-		else if(MachineState.nodeState == EMachineState.FOLLOWER)
+		else if(MachineState.getNodeState() == EMachineState.FOLLOWER)
 			server = MachineState.portServerMap.get(state==EServerState.READ?IRaftConstants.FOLLOWER_READ_PORT:IRaftConstants.FOLLOWER_WRITE_PORT);
-		else if(MachineState.nodeState == EMachineState.CANDIDATE)
+		else if(MachineState.getNodeState() == EMachineState.CANDIDATE)
 			server = MachineState.portServerMap.get(state==EServerState.READ?IRaftConstants.CANDIDATE_READ_PORT:IRaftConstants.CANDIDATE_WRITE_PORT);
-		else if(MachineState.nodeState == EMachineState.LEADER)
+		else if(MachineState.getNodeState() == EMachineState.LEADER)
 			server = MachineState.portServerMap.get(state==EServerState.READ?IRaftConstants.LEADER_READ_PORT:IRaftConstants.LEADER_WRITE_PORT);
 		return server;
 	}

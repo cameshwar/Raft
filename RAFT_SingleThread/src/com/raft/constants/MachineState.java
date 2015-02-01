@@ -30,6 +30,10 @@ public class MachineState {
 		MachineState.nodeState = state;		
 	}
 	
+	public synchronized static EMachineState getNodeState() {
+		return MachineState.nodeState;
+	}
+	
 	public synchronized static void setServerState(EServerState state) {
 		MachineState.serverState = state;		
 	}
