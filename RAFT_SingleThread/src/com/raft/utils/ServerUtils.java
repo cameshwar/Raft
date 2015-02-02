@@ -45,13 +45,14 @@ public class ServerUtils {
 	
 	public static ServerStateNode getServerNode(EServerState state) {
 		ServerStateNode server = null;
-		if(MachineState.getNodeState() == EMachineState.INITIATOR)
+		System.out.println(MachineState.getNodeState().toString());
+		if(EMachineState.INITIATOR.equals(MachineState.getNodeState()))
 			server = MachineState.portServerMap.get(state==EServerState.READ?IRaftConstants.INITIATOR_READ_PORT:IRaftConstants.INITIATOR_WRITE_PORT);
-		else if(MachineState.getNodeState() == EMachineState.FOLLOWER)
+		else if(EMachineState.FOLLOWER.equals(MachineState.getNodeState()))
 			server = MachineState.portServerMap.get(state==EServerState.READ?IRaftConstants.FOLLOWER_READ_PORT:IRaftConstants.FOLLOWER_WRITE_PORT);
-		else if(MachineState.getNodeState() == EMachineState.CANDIDATE)
+		else if(EMachineState.CANDIDATE.equals(MachineState.getNodeState()))
 			server = MachineState.portServerMap.get(state==EServerState.READ?IRaftConstants.CANDIDATE_READ_PORT:IRaftConstants.CANDIDATE_WRITE_PORT);
-		else if(MachineState.getNodeState() == EMachineState.LEADER)
+		else if(EMachineState.LEADER.equals(MachineState.getNodeState()))
 			server = MachineState.portServerMap.get(state==EServerState.READ?IRaftConstants.LEADER_READ_PORT:IRaftConstants.LEADER_WRITE_PORT);
 		return server;
 	}

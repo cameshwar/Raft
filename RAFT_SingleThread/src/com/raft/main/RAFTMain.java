@@ -88,7 +88,7 @@ public class RAFTMain {
 		
 		List<String> serverList = new ArrayList<String>();
 		serverList.add("127.0.0.1");
-		serverList.add("localhost");
+		//serverList.add("localhost");
 		MachineState.serverList = serverList;
 		
 		// Step2:

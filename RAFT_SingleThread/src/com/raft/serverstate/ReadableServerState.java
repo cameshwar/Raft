@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
 import com.raft.rpc.AppendEntriesRPC;
 import com.raft.start.ServerStateNode;
+import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
 
@@ -38,13 +40,13 @@ public class ReadableServerState implements IServerStateContext{
 	
 	public static IServerStateContext getServerStateContext() {
 		if(ReadableServerState.serverState == null)
-			ReadableServerState.serverState = new ReadableServerState();
+			ReadableServerState.serverState = new ReadableServerState();		
 		return ReadableServerState.serverState;
 	}
 
 	@Override
 	public void changeState(final ServerStateNode server) {
-		
+		this.ready = false;
 		new Thread(new Runnable() {
 			
 			@Override
@@ -59,6 +61,7 @@ public class ReadableServerState implements IServerStateContext{
 						SelectionKey key = i.next(); 
 						i.remove();
 						
+						//while(key.channel() instanceof ServerSocketChannel);
 						client = (SocketChannel) key.channel();					
 						
 						
@@ -74,8 +77,7 @@ public class ReadableServerState implements IServerStateContext{
 								readData.write(buffer.get());
 							}
 							buffer.clear();
-						}
-						System.out.println("server "+server.toString());
+						}						
 						
 						/*if(this.readData.size()>0) {					
 							readerRPC.readDocument(this.readData.toString());
@@ -103,8 +105,8 @@ public class ReadableServerState implements IServerStateContext{
 					/*if(MachineState.serverState!=EServerState.READ)
 						break;*/
 					if(ready) {
-						System.out.println("Data ");
-						ready = false;
+						System.out.println(server.toString()+" is ready to read");
+						//ready = false;
 						break;
 					}
 					}
@@ -112,8 +114,9 @@ public class ReadableServerState implements IServerStateContext{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+				System.out.println("Exiting Readable Thread "+server.toString());
 			}
+			
 		}).start();
 		
 	}

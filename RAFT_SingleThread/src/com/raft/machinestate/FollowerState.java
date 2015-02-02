@@ -31,9 +31,16 @@ public class FollowerState implements IMachineContext{
 	}
 	
 	private void setServerStates() {
-		readableServer = ServerUtils.getServerContext(EServerState.READ);
-		writableServer = ServerUtils.getServerContext(EServerState.WRITE);
+		this.readableServer = ServerUtils.getServerContext(EServerState.READ);
+		this.writableServer = ServerUtils.getServerContext(EServerState.WRITE);
 	}
+	
+	private void resetServerStates() {
+		this.readableServer = null;
+		this.writableServer = null;
+		//this.acceptableServer = null;
+	}
+	
 	
 	private AppendEntriesRPC processRawData(ByteArrayBuffer rawData) {
 		AppendEntriesRPC appendEntriesRPC = null;
@@ -70,6 +77,7 @@ public class FollowerState implements IMachineContext{
 		while(!readableServer.isReady()) {			
 			if(timer.isTimeOut()) {
 				MachineState.setMachineState(EMachineState.CANDIDATE);
+				timer.setShutTimer(true);
 				return;
 			}
 		}
@@ -83,6 +91,7 @@ public class FollowerState implements IMachineContext{
 		while(!timer.isTimeOut());
 		timer.setShutTimer(true);	
 		MachineState.setMachineState(EMachineState.CANDIDATE);
+		resetServerStates();
 	}
 
 }

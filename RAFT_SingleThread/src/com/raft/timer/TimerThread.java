@@ -30,14 +30,14 @@ public class TimerThread implements Runnable{
 		while(true) {
 			if(shutTimer) {
 				break;
-			} else if((System.currentTimeMillis()-now) > timer) {
-				//System.out.println("Signalled as timeout");
-				timeOut = true;
-				//break;			
 			} else if(resetTimer) {
 				now = System.currentTimeMillis();
 				//resetTimer = false;
 				//System.out.println("Timer Resetted");
+			} else if((System.currentTimeMillis()-now) > timer) {
+				//System.out.println("Signalled as timeout");
+				timeOut = true;
+				//break;			
 			}
 		}
 		System.out.println("Timer thread - Shutdown");
