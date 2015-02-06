@@ -7,30 +7,28 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
-import com.raft.constants.EServerState;
-import com.raft.constants.MachineState;
 import com.raft.start.ServerStateNode;
 import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
+public class WritableServerState implements IServerStateContext {
 
-public class WritableServerState implements IServerStateContext{
-	
 	private static WritableServerState serverState = null;
-	
+
 	private boolean ready = false;
-	
-	//private AppendEntriesRPC appendEntriesRPC;
-	
-/*	public AppendEntriesRPC getAppendEntriesRPC() {
-		return appendEntriesRPC;
-	}*/	
-	
+
+	// private AppendEntriesRPC appendEntriesRPC;
+
+	/*
+	 * public AppendEntriesRPC getAppendEntriesRPC() { return appendEntriesRPC;
+	 * }
+	 */
+
 	private WritableServerState() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public static IServerStateContext getServerStateContext() {
-		if(WritableServerState.serverState == null)
+		if (WritableServerState.serverState == null)
 			WritableServerState.serverState = new WritableServerState();
 		return WritableServerState.serverState;
 	}
@@ -38,49 +36,40 @@ public class WritableServerState implements IServerStateContext{
 	@Override
 	public void changeState(final ServerStateNode server) {
 		System.out.println("Writing");
-		new Thread(
-				new Runnable() {
-					
-					@Override
-					public void run() {
-						SocketChannel client = null;
-						Selector selector = server.getSelector();
-						
-						try {
-							while(true) {
-							selector.select();
-							for (Iterator<SelectionKey> i = selector.selectedKeys().iterator(); i.hasNext();) {
-								SelectionKey key = i.next(); 
-								i.remove();
-								
-								client = (SocketChannel) key.channel();					
-								
-								
-								//ReadableByteChannel channel = Channels.newChannel(client.socket().getInputStream());
-								client = (SocketChannel) key.channel();
-								ByteBuffer buf = null;										
-								buf = ByteBuffer.wrap(Integer.toString(5).getBytes());
-								client.write(buf);
-								ready = true;
-								//key.interestOps(SelectionKey.OP_READ);
-								//MachineState.setServerState(EServerState.READ);
-								/*if(MachineState.serverState!=EServerState.WRITE) {
-									System.out.println("key set");
-									key.interestOps(SelectionKey.OP_READ);
-									break;
-								}*/
-							}
-							if(ready)
-								break;
-							
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				SocketChannel client = null;
+				Selector selector = server.getSelector();
+
+				try {
+					while (true) {
+						selector.select();
+						for (Iterator<SelectionKey> i = selector.selectedKeys()
+								.iterator(); i.hasNext();) {
+							SelectionKey key = i.next();
+							i.remove();
+
+							client = (SocketChannel) key.channel();
+
+							client = (SocketChannel) key.channel();
+							ByteBuffer buf = null;
+							buf = ByteBuffer.wrap(Integer.toString(5)
+									.getBytes());
+							client.write(buf);
+							ready = true;
 						}
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						if (ready)
+							break;
 					}
-				}).start();
-		
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
+
 	}
 
 	@Override
@@ -91,6 +80,6 @@ public class WritableServerState implements IServerStateContext{
 	@Override
 	public void processData(ByteArrayBuffer buf) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

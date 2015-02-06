@@ -4,13 +4,11 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
 import com.raft.rpc.AppendEntriesRPC;
 import com.raft.start.ServerStateNode;
-import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
 
@@ -61,14 +59,9 @@ public class ReadableServerState implements IServerStateContext{
 						SelectionKey key = i.next(); 
 						i.remove();
 						
-						//while(key.channel() instanceof ServerSocketChannel);
 						client = (SocketChannel) key.channel();					
 						
-						
-						//ReadableByteChannel channel = Channels.newChannel(client.socket().getInputStream());
 						ByteBuffer buffer = ByteBuffer.allocate(1024);
-						//ByteArrayBuffer data = new ByteArrayBuffer();
-						//XMLReaderRPC readerRPC = new XMLReaderRPC();
 						
 						while(client.read(buffer) > 0) {					
 							ready = true;
@@ -77,44 +70,15 @@ public class ReadableServerState implements IServerStateContext{
 								readData.write(buffer.get());
 							}
 							buffer.clear();
-						}						
+						}
 						
-						/*if(this.readData.size()>0) {					
-							readerRPC.readDocument(this.readData.toString());
-							readerRPC.processRPC();
-							System.out.println("RPC Processed");
-							this.appendEntriesRPC = new AppendEntriesRPC(readerRPC.getValueMap());
-							System.out.println("RPC Obj Created");
-							this.readData.reset();
-							//key.interestOps(SelectionKey.OP_WRITE);				
-						
-							//MachineState.setServerState(EServerState.WRITE);
-						
-							this.readData.close();			
-						
-							System.out.println("Data Read");
-							this.appendEntriesRPC = null;
-							this.reading = false;
-						}*/
-						//client.socket().close();
-						/*if(MachineState.serverState!=EServerState.READ) {
-							key.interestOps(SelectionKey.OP_WRITE);
-							break;								
-						}*/
-					}
-					/*if(MachineState.serverState!=EServerState.READ)
-						break;*/
-					if(ready) {
-						System.out.println(server.toString()+" is ready to read");
-						//ready = false;
+					}					
+					if(ready) 
 						break;
 					}
-					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
+				} catch (IOException e) {					
 					e.printStackTrace();
-				}
-				System.out.println("Exiting Readable Thread "+server.toString());
+				}				
 			}
 			
 		}).start();

@@ -7,10 +7,8 @@ import com.raft.constants.EMachineState;
 import com.raft.constants.EServerState;
 import com.raft.constants.IRaftConstants;
 import com.raft.constants.MachineState;
-import com.raft.serverstate.AcceptableServerState;
 import com.raft.serverstate.IServerStateContext;
 import com.raft.start.ClientNode;
-import com.raft.start.ServerStateNode;
 import com.raft.timer.TimerThread;
 import com.raft.utils.ServerUtils;
 
@@ -53,7 +51,6 @@ public class CandidateState implements IMachineContext{
 		List<String> serverList = MachineState.serverList;
 		final List<ClientNode> clients = new ArrayList<ClientNode>(serverList.size());
 		for(int index = 0 ; index<serverList.size(); index++) {
-			final int serverIndex = index;
 			new Thread(
 					new Runnable() {
 						
@@ -62,9 +59,9 @@ public class CandidateState implements IMachineContext{
 							List<Integer> bCastMsgs1 = new ArrayList<Integer>();
 							bCastMsgs1.add(IRaftConstants.FOLLOWER_READ_PORT);
 							//bCastMsgs1.add(IRaftConstants.FOLLOWER_WRITE_PORT);
-							/*ClientNode client = new ClientNode(bCastMsgs1, "READ");
+							ClientNode client = new ClientNode(bCastMsgs1, "READ");
 							clients.add(client);
-							new Thread(client, "Thread 1").start();*/
+							new Thread(client, "Thread 1").start();
 							//writableServer.changeState(writeServers.get(serverIndex));
 							//System.out.println("client thread running ");
 							readableServer.changeState(ServerUtils.getServerNode(EServerState.READ));
