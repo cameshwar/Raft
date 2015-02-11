@@ -1,7 +1,10 @@
 package com.raft.machinestate;
 
+import java.util.Map;
+
 import com.raft.constants.EMachineState;
 import com.raft.constants.MachineState;
+import com.raft.start.ServerStateNode;
 
 
 
@@ -19,7 +22,7 @@ public class InitiatorState implements IMachineContext{
 	}
 	
 	@Override
-	public void process() {
+	public void process(Map<Integer, ServerStateNode> servers) {
 		MachineState.setMachineState(EMachineState.FOLLOWER);		
 	}
 	

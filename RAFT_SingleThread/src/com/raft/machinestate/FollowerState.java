@@ -1,5 +1,7 @@
 package com.raft.machinestate;
 
+import java.util.Map;
+
 import com.raft.constants.EMachineState;
 import com.raft.constants.EServerState;
 import com.raft.constants.IRaftConstants;
@@ -65,14 +67,15 @@ public class FollowerState implements IMachineContext{
 	
 	
 	@Override
-	public void process() {
+	public void process(Map<Integer, ServerStateNode> servers) {
 		//setServerStates();
 		TimerThread timer = new TimerThread(IRaftConstants.FOLLOWER_TIMEOUT);
 		new Thread(timer,"Timer Follower").start();
 		
-		ServerStateNode server = ServerUtils.getServerNode(EServerState.READ);
+		ServerStateNode readServer = servers.get(ServerUtils.getMachineServerState(EMachineState.FOLLOWER, EServerState.READ));
+		ServerStateNode writeServer = servers.get(ServerUtils.getMachineServerState(EMachineState.FOLLOWER, EServerState.WRITE));
 		
-		FollowerState.readableServer.changeState(server);		
+		FollowerState.readableServer.changeState(readServer);		
 		while(!FollowerState.readableServer.isReady()) {			
 			if(timer.isTimeOut()) {
 				MachineState.setMachineState(EMachineState.CANDIDATE);
@@ -84,7 +87,7 @@ public class FollowerState implements IMachineContext{
 		ByteArrayBuffer readData = new ByteArrayBuffer();
 		FollowerState.readableServer.processData(readData);
 		AppendEntriesRPC appendEntriesRPC = processRawData(readData);
-		FollowerState.writableServer.changeState(ServerUtils.getServerNode(EServerState.WRITE));
+		FollowerState.writableServer.changeState(writeServer);
 		timer.setResetTimer(false);
 		
 		while(!timer.isTimeOut());

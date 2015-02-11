@@ -15,6 +15,8 @@ public class WritableServerState implements IServerStateContext {
 	private static WritableServerState serverState = null;
 
 	private boolean ready = false;
+	
+	private boolean close = false;
 
 	// private AppendEntriesRPC appendEntriesRPC;
 
@@ -45,13 +47,20 @@ public class WritableServerState implements IServerStateContext {
 
 				try {
 					while (true) {
+						if(close) {
+							close = false;
+							break;
+						}
 						selector.select();
 						for (Iterator<SelectionKey> i = selector.selectedKeys()
 								.iterator(); i.hasNext();) {
 							SelectionKey key = i.next();
 							i.remove();
-
-							client = (SocketChannel) key.channel();
+							
+							if(key.isWritable())
+								client = (SocketChannel) key.channel();
+							else
+								continue;
 
 							client = (SocketChannel) key.channel();
 							ByteBuffer buf = null;
@@ -81,5 +90,12 @@ public class WritableServerState implements IServerStateContext {
 	public void processData(ByteArrayBuffer buf) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void closeConnection(ServerStateNode server) {
+		this.close = true;
+		if(!close)
+			server.destroy();		
 	}
 }

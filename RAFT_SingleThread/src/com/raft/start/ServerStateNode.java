@@ -72,4 +72,14 @@ public class ServerStateNode{
 	public String toString() {		
 		return name;
 	}
+	
+	public void destroy() {
+		try {
+			this.server.close();
+			this.selector.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

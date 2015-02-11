@@ -12,4 +12,6 @@ public interface IServerStateContext {
 	
 	public void processData(ByteArrayBuffer buf);
 	
+	public void closeConnection(ServerStateNode server);
+	
 }

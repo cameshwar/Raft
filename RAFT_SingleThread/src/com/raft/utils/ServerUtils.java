@@ -36,6 +36,31 @@ public class ServerUtils {
 		return server;
 	}
 	
+	public static void destroyReadWriteServers(EMachineState machineState, Map<Integer, ServerStateNode> serverMap) {
+		
+		IServerStateContext readServerState = getServerContext(EServerState.READ);
+		IServerStateContext writeServerState = getServerContext(EServerState.WRITE);
+		readServerState.closeConnection(serverMap.get(getMachineServerState(machineState, EServerState.READ)));
+		writeServerState.closeConnection(serverMap.get(getMachineServerState(machineState, EServerState.WRITE)));
+		serverMap.clear();
+		System.out.println("Closed connections");
+	}
+	
+	public static Map<Integer, ServerStateNode> createReadWriteServers(EMachineState machineState) {
+		Map<Integer, ServerStateNode> serverMap = new HashMap<Integer, ServerStateNode>();
+		for(EServerState serverState : EServerState.values()) 
+			if(serverState != EServerState.ACCEPT) {
+				String serverIp = MachineState.getServerPropertiesMap().get(MachineState.getServerName());
+				Integer serverMachineState = ServerUtils.getMachineServerState(machineState, serverState);
+				serverMap.put(
+						serverMachineState,
+						new ServerStateNode(ServerUtils
+								.createServer(serverIp,serverMachineState),
+								serverMachineState.toString(), serverState));
+			}
+		return serverMap;
+	}
+	
 	public static Integer getMachineServerState(EMachineState machineState, EServerState serverState) {
 		Integer machineServerState = null;
 		switch(machineState) {

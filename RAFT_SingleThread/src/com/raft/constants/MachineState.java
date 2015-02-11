@@ -42,9 +42,9 @@ public class MachineState {
 		return serverState;
 	}
 
-	public static void initializeMachineState(List<String> nodeList, Map<Integer, ServerStateNode> portServerMap) {
+	public static void initializeMachineState(List<String> nodeList) {
 		MachineState.nodeList = nodeList;
-		MachineState.portServerMap = portServerMap;
+		//MachineState.portServerMap = portServerMap;
 	}
 	
 	public synchronized static void setMachineState(EMachineState state) {

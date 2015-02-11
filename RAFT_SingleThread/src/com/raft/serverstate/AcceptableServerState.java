@@ -54,6 +54,7 @@ public class AcceptableServerState implements IServerStateContext {
 									: SelectionKey.OP_WRITE);
 				}
 			}
+			System.out.println("changed the mode");
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -75,6 +76,12 @@ public class AcceptableServerState implements IServerStateContext {
 	public void processData(ByteArrayBuffer buf) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void closeConnection(ServerStateNode server) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

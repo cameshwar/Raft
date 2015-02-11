@@ -1,16 +1,10 @@
 package com.raft.main;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.raft.constants.EMachineState;
-import com.raft.constants.EServerState;
 import com.raft.constants.MachineState;
-import com.raft.start.ServerStateNode;
 import com.raft.start.StartRaft;
-import com.raft.start.StartServer;
 import com.raft.utils.ServerUtils;
 
 public class RAFTMain {
@@ -19,7 +13,7 @@ public class RAFTMain {
 		MachineState.setServerPropertiesMap(ServerUtils.serverProperties("properties/server.properties"));		
 		MachineState.setServerName(args[0]);
 		String serverIp = MachineState.getServerPropertiesMap().get(MachineState.getServerName());
-		Map<Integer, ServerStateNode> portServerMap = new HashMap<Integer, ServerStateNode>();
+		/*Map<Integer, ServerStateNode> portServerMap = new HashMap<Integer, ServerStateNode>();
 		for(EMachineState machineState : EMachineState.values()) 
 			for(EServerState serverState : EServerState.values()) 
 				if(serverState != EServerState.ACCEPT) {
@@ -32,7 +26,7 @@ public class RAFTMain {
 				}		
 		
 		System.out.println("Starting Server ");
-		StartServer.getServer().startServer(portServerMap);
+		StartServer.getServer().startServer(portServerMap);*/
 		
 		List<String> serverList = new ArrayList<String>();
 		serverList.add("127.0.0.1");
@@ -41,7 +35,7 @@ public class RAFTMain {
 		
 		// Step2:
 		List<String> nodeList = new ArrayList<String>();
-		MachineState.initializeMachineState(nodeList, portServerMap);
+		MachineState.initializeMachineState(nodeList);
 		System.out.println("Starting Raft");
 		new Thread(new StartRaft()).start();
 	}

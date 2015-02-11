@@ -2,6 +2,7 @@ package com.raft.machinestate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.raft.constants.EMachineState;
 import com.raft.constants.EServerState;
@@ -9,6 +10,7 @@ import com.raft.constants.IRaftConstants;
 import com.raft.constants.MachineState;
 import com.raft.serverstate.IServerStateContext;
 import com.raft.start.ClientNode;
+import com.raft.start.ServerStateNode;
 import com.raft.timer.TimerThread;
 import com.raft.utils.ServerUtils;
 
@@ -21,6 +23,8 @@ public class CandidateState implements IMachineContext{
 	private static IServerStateContext writableServer = null;
 	
 	private static IServerStateContext acceptableServer = null;
+	
+	private Map<Integer, ServerStateNode> servers = null;
 	
 	private int noOfVotes = 0;
 	
@@ -49,13 +53,23 @@ public class CandidateState implements IMachineContext{
 		this.acceptableServer = null;
 	}
 	
-	private void broadCastMsgs() {
+	private List<Thread> broadCastMsgs() {
+		final ServerStateNode readServer = servers.get(ServerUtils.getMachineServerState(EMachineState.CANDIDATE, EServerState.READ));
+		ServerStateNode writeServer = servers.get(ServerUtils.getMachineServerState(EMachineState.CANDIDATE, EServerState.WRITE));
 		noOfVotes = 0;
 		List<String> serverList = MachineState.serverList;
 		final List<ClientNode> clients = new ArrayList<ClientNode>(serverList.size());
+		List<Thread> threads = new ArrayList<Thread>();
 		for(int index = 0 ; index<serverList.size(); index++) {
-			new Thread(
-					new Runnable() {
+			Thread thread = new Thread()					
+					{
+						
+						@Override
+						public void interrupt() {
+							// TODO Auto-generated method stub
+							super.interrupt();
+							System.out.println("Thread interrupted");
+						}
 						
 						@Override
 						public void run() {
@@ -67,7 +81,7 @@ public class CandidateState implements IMachineContext{
 							new Thread(client, "Thread 1").start();
 							//writableServer.changeState(writeServers.get(serverIndex));
 							//System.out.println("client thread running ");
-							CandidateState.readableServer.changeState(ServerUtils.getServerNode(EServerState.READ));
+							CandidateState.readableServer.changeState(readServer);
 							List<Integer> bCastMsgs2 = new ArrayList<Integer>();
 							bCastMsgs2.add(IRaftConstants.CANDIDATE_READ_PORT);
 							//bCastMsgs1.add(IRaftConstants.FOLLOWER_WRITE_PORT);
@@ -76,20 +90,30 @@ public class CandidateState implements IMachineContext{
 							noOfVotes++;
 							System.out.println("votes "+noOfVotes);
 						}
-					}
-					).start();			
-		}		
+					};
+			threads.add(thread);
+			thread.start();
+		}
+		return threads;
 	}
 
 	@Override
-	public void process() {
+	public void process(Map<Integer, ServerStateNode> servers) {
+		this.servers = servers;
 		// TODO Auto-generated method stub
 		//setServerStates();
 		TimerThread timer = new TimerThread(IRaftConstants.CANDIDATE_TIMEOUT);
 		new Thread(timer,"Timer Candidate").start();
-		
+		List<Thread> threads = null;
 		while(true) {
-			broadCastMsgs();
+			if(threads == null)
+				threads= broadCastMsgs();
+			else {
+				for(Thread thread: threads)
+					thread.interrupt();
+				threads.clear();
+			}
+			threads = broadCastMsgs();
 			while(!timer.isTimeOut());
 			if(noOfVotes>=1)
 				break;
