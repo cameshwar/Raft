@@ -6,8 +6,8 @@ public enum EMachineState {
 	INITIATOR {
 		@Override
 		public boolean process(IMachineContext machineContext) {
-			machineContext.process();
 			System.out.println("Machine State: Initiator");
+			machineContext.process();			
 			//machineContext.setState(FOLLOWER);
 			return true;
 		}
@@ -15,8 +15,8 @@ public enum EMachineState {
 	FOLLOWER {
 		@Override
 		public boolean process(IMachineContext machineContext) {
-			machineContext.process();
 			System.out.println("Machine State: Follower");
+			machineContext.process();			
 			//MachineState.setState(CANDIDATE);
 			return true;
 		}
@@ -24,8 +24,8 @@ public enum EMachineState {
 	CANDIDATE {
 		@Override
 		public boolean process(IMachineContext machineContext) {
-			machineContext.process();
 			System.out.println("Machine State: Candidate");
+			machineContext.process();			
 			//MachineState.setState(LEADER);
 			//MachineState.setState(FOLLOWER);
 			return true;
@@ -34,6 +34,7 @@ public enum EMachineState {
 	LEADER {
 		@Override
 		public boolean process(IMachineContext machineContext) {
+			System.out.println("Machine State: Leader");
 			machineContext.process();			
 			//MachineState.setState(FOLLOWER);
 			return true;

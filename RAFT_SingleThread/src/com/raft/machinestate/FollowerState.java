@@ -16,9 +16,9 @@ public class FollowerState implements IMachineContext{
 	
 	private static FollowerState followerState = null;
 	
-	private IServerStateContext readableServer = null;
+	private static IServerStateContext readableServer = null;
 	
-	private IServerStateContext writableServer = null;
+	private static IServerStateContext writableServer = null;
 	
 	private FollowerState() {
 	}
@@ -27,6 +27,8 @@ public class FollowerState implements IMachineContext{
 		if(followerState == null) {
 			followerState = new FollowerState();
 		}
+		readableServer = ServerUtils.getServerContext(EServerState.READ);
+		writableServer = ServerUtils.getServerContext(EServerState.WRITE);
 		return followerState;
 	}
 	
@@ -49,9 +51,7 @@ public class FollowerState implements IMachineContext{
 			
 			readerRPC.readDocument(rawData.toString());
 			readerRPC.processRPC();
-			System.out.println("RPC Processed");
 			appendEntriesRPC = new AppendEntriesRPC(readerRPC.getValueMap());
-			System.out.println("RPC Obj Created");
 			rawData.reset();
 			/*try {
 				rawData.close();
@@ -66,15 +66,14 @@ public class FollowerState implements IMachineContext{
 	
 	@Override
 	public void process() {
-		setServerStates();
-		System.out.println("Context: Follower");
+		//setServerStates();
 		TimerThread timer = new TimerThread(IRaftConstants.FOLLOWER_TIMEOUT);
 		new Thread(timer,"Timer Follower").start();
 		
 		ServerStateNode server = ServerUtils.getServerNode(EServerState.READ);
 		
-		readableServer.changeState(server);		
-		while(!readableServer.isReady()) {			
+		FollowerState.readableServer.changeState(server);		
+		while(!FollowerState.readableServer.isReady()) {			
 			if(timer.isTimeOut()) {
 				MachineState.setMachineState(EMachineState.CANDIDATE);
 				timer.setShutTimer(true);
@@ -83,15 +82,15 @@ public class FollowerState implements IMachineContext{
 		}
 		timer.setResetTimer(true);
 		ByteArrayBuffer readData = new ByteArrayBuffer();
-		readableServer.processData(readData);
+		FollowerState.readableServer.processData(readData);
 		AppendEntriesRPC appendEntriesRPC = processRawData(readData);
-		writableServer.changeState(ServerUtils.getServerNode(EServerState.WRITE));
+		FollowerState.writableServer.changeState(ServerUtils.getServerNode(EServerState.WRITE));
 		timer.setResetTimer(false);
 		
 		while(!timer.isTimeOut());
 		timer.setShutTimer(true);	
 		MachineState.setMachineState(EMachineState.CANDIDATE);
-		resetServerStates();
+		//resetServerStates();
 	}
 
 }

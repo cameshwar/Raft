@@ -20,7 +20,6 @@ public class InitiatorState implements IMachineContext{
 	
 	@Override
 	public void process() {
-		System.out.println("Context: Initiator");
 		MachineState.setMachineState(EMachineState.FOLLOWER);		
 	}
 	

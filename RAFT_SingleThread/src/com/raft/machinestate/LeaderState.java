@@ -15,7 +15,6 @@ private static LeaderState leaderState = null;
 
 	@Override
 	public void process() {
-		System.out.println("Leader");
 		while(true);
 		
 	}

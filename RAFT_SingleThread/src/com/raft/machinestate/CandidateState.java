@@ -16,11 +16,11 @@ public class CandidateState implements IMachineContext{
 	
 	private static CandidateState candidateState = null;
 	
-	private IServerStateContext readableServer = null;
+	private static IServerStateContext readableServer = null;
 	
-	private IServerStateContext writableServer = null;
+	private static IServerStateContext writableServer = null;
 	
-	private IServerStateContext acceptableServer = null;
+	private static IServerStateContext acceptableServer = null;
 	
 	private int noOfVotes = 0;
 	
@@ -31,6 +31,9 @@ public class CandidateState implements IMachineContext{
 		if(candidateState == null) {
 			candidateState = new CandidateState();			
 		}
+		readableServer = ServerUtils.getServerContext(EServerState.READ);
+		writableServer = ServerUtils.getServerContext(EServerState.WRITE);
+		acceptableServer = ServerUtils.getServerContext(EServerState.ACCEPT);
 		return candidateState;
 	}
 	
@@ -64,12 +67,12 @@ public class CandidateState implements IMachineContext{
 							new Thread(client, "Thread 1").start();
 							//writableServer.changeState(writeServers.get(serverIndex));
 							//System.out.println("client thread running ");
-							readableServer.changeState(ServerUtils.getServerNode(EServerState.READ));
+							CandidateState.readableServer.changeState(ServerUtils.getServerNode(EServerState.READ));
 							List<Integer> bCastMsgs2 = new ArrayList<Integer>();
 							bCastMsgs2.add(IRaftConstants.CANDIDATE_READ_PORT);
 							//bCastMsgs1.add(IRaftConstants.FOLLOWER_WRITE_PORT);
 							new Thread(new ClientNode(bCastMsgs2, "READ"), "Thread 1").start();
-							while(!readableServer.isReady());
+							while(!CandidateState.readableServer.isReady());
 							noOfVotes++;
 							System.out.println("votes "+noOfVotes);
 						}
@@ -81,8 +84,7 @@ public class CandidateState implements IMachineContext{
 	@Override
 	public void process() {
 		// TODO Auto-generated method stub
-		System.out.println("candidate");
-		setServerStates();
+		//setServerStates();
 		TimerThread timer = new TimerThread(IRaftConstants.CANDIDATE_TIMEOUT);
 		new Thread(timer,"Timer Candidate").start();
 		
@@ -98,9 +100,8 @@ public class CandidateState implements IMachineContext{
 			}
 		}
 		timer.setShutTimer(true);
-		System.out.println("Promoting");
 		MachineState.setMachineState(EMachineState.LEADER);
-		resetServerStates();
+		//resetServerStates();
 	}
 
 }
