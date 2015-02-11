@@ -36,12 +36,40 @@ public class ServerUtils {
 		return server;
 	}
 	
+	public static Integer getMachineServerState(EMachineState machineState, EServerState serverState) {
+		Integer machineServerState = null;
+		switch(machineState) {
+			case INITIATOR:
+				machineServerState = serverState==EServerState.READ?
+						IRaftConstants.INITIATOR_READ_PORT:
+							IRaftConstants.INITIATOR_WRITE_PORT;
+				break;
+			case FOLLOWER:
+				machineServerState = serverState==EServerState.READ?
+						IRaftConstants.FOLLOWER_READ_PORT:
+							IRaftConstants.FOLLOWER_WRITE_PORT;
+				break;
+			case CANDIDATE:
+				machineServerState = serverState==EServerState.READ?
+						IRaftConstants.CANDIDATE_READ_PORT:
+							IRaftConstants.CANDIDATE_WRITE_PORT;
+				break;
+			case LEADER:
+				machineServerState = serverState==EServerState.READ?
+						IRaftConstants.LEADER_READ_PORT:
+							IRaftConstants.LEADER_WRITE_PORT;
+				break;			
+		}
+		return machineServerState;
+	}
+	
 	public static Map<String, String> serverProperties(String fileName) {
 		Properties serverProperties = new Properties();
 		Map<String, String> serverMap = new HashMap<String, String>();
 		try {
 			serverProperties.load(new FileInputStream(new File(fileName)));
-			serverProperties.putAll(serverMap);
+			for(Object serverKeys: serverProperties.keySet())
+					serverMap.put((String)serverKeys, (String)serverProperties.get(serverKeys));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

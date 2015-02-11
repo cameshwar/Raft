@@ -16,7 +16,28 @@ public class MachineState {
 	
 	public static EServerState serverState = EServerState.ACCEPT;
 	
+	private static Map<String, String> serverPropertiesMap;	
 	
+	private static String serverName;
+	
+	
+	public static String getServerName() {
+		return serverName;
+	}
+
+	public static void setServerName(String serverName) {
+		MachineState.serverName = serverName;
+	}
+
+	public static Map<String, String> getServerPropertiesMap() {
+		return serverPropertiesMap;
+	}
+
+	public static void setServerPropertiesMap(
+			Map<String, String> serverPropertiesMap) {
+		MachineState.serverPropertiesMap = serverPropertiesMap;
+	}
+
 	public synchronized static EServerState getServerState() {
 		return serverState;
 	}
