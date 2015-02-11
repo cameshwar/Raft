@@ -1,9 +1,15 @@
 package com.raft.main;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import com.raft.constants.EServerState;
 import com.raft.constants.IRaftConstants;
@@ -42,46 +48,51 @@ public class RAFTMain {
 		 * System.out.println("Starting Server ");
 		 * StartServer.getServer().startServer(portServerMap);
 		 */
+						
+		Map<String, String> serverMap = ServerUtils.serverProperties("properties/server.properties");
+		String serverName = args[0];
+		String serverIp = serverMap.get(serverName);
+		
 		Map<Integer, ServerStateNode> portServerMap = new HashMap<Integer, ServerStateNode>();
 		portServerMap.put(
 				IRaftConstants.INITIATOR_READ_PORT,
 				new ServerStateNode(ServerUtils
-						.creteServer("127.0.0.1",IRaftConstants.INITIATOR_READ_PORT),
+						.createServer("127.0.0.1",IRaftConstants.INITIATOR_READ_PORT),
 						"Init Read", EServerState.READ));
 		portServerMap.put(
 				IRaftConstants.INITIATOR_WRITE_PORT,
 				new ServerStateNode(ServerUtils
-						.creteServer("127.0.0.1",IRaftConstants.INITIATOR_WRITE_PORT),
+						.createServer("127.0.0.1",IRaftConstants.INITIATOR_WRITE_PORT),
 						"Init write", EServerState.WRITE));
 		portServerMap.put(
 				IRaftConstants.FOLLOWER_READ_PORT,
 				new ServerStateNode(ServerUtils
-						.creteServer("127.0.0.1",IRaftConstants.FOLLOWER_READ_PORT),
+						.createServer("127.0.0.1",IRaftConstants.FOLLOWER_READ_PORT),
 						"Foll Read", EServerState.READ));
 		portServerMap.put(
 				IRaftConstants.FOLLOWER_WRITE_PORT,
 				new ServerStateNode(ServerUtils
-						.creteServer("127.0.0.1",IRaftConstants.FOLLOWER_WRITE_PORT),
+						.createServer("127.0.0.1",IRaftConstants.FOLLOWER_WRITE_PORT),
 						"Foll write", EServerState.WRITE));
 		portServerMap.put(
 				IRaftConstants.CANDIDATE_READ_PORT,
 				new ServerStateNode(ServerUtils
-						.creteServer("127.0.0.1",IRaftConstants.CANDIDATE_READ_PORT),
+						.createServer("127.0.0.1",IRaftConstants.CANDIDATE_READ_PORT),
 						"Cand Read", EServerState.READ));
 		portServerMap.put(
 				IRaftConstants.CANDIDATE_WRITE_PORT,
 				new ServerStateNode(ServerUtils
-						.creteServer("127.0.0.1",IRaftConstants.CANDIDATE_WRITE_PORT),
+						.createServer("127.0.0.1",IRaftConstants.CANDIDATE_WRITE_PORT),
 						"Cand write", EServerState.WRITE));
 		portServerMap.put(
 				IRaftConstants.LEADER_READ_PORT, 
 				new ServerStateNode(ServerUtils.
-						creteServer("127.0.0.1",IRaftConstants.LEADER_READ_PORT),
+						createServer("127.0.0.1",IRaftConstants.LEADER_READ_PORT),
 				"Lead Read", EServerState.READ));
 		portServerMap.put(
 				IRaftConstants.LEADER_WRITE_PORT,
 				new ServerStateNode(ServerUtils
-						.creteServer("127.0.0.1",IRaftConstants.LEADER_WRITE_PORT),
+						.createServer("127.0.0.1",IRaftConstants.LEADER_WRITE_PORT),
 						"Lead write", EServerState.WRITE));
 		System.out.println("Starting Server ");
 		StartServer.getServer().startServer(portServerMap);

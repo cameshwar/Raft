@@ -1,8 +1,14 @@
 package com.raft.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 import com.raft.constants.EMachineState;
 import com.raft.constants.EServerState;
@@ -16,7 +22,7 @@ import com.raft.start.ServerStateNode;
 
 public class ServerUtils {
 	
-	public static ServerSocketChannel creteServer(String hostName, int port) {
+	public static ServerSocketChannel createServer(String hostName, int port) {
 		ServerSocketChannel server = null;
 		try {
 			server = ServerSocketChannel.open();
@@ -28,6 +34,26 @@ public class ServerUtils {
 		}
 		System.out.println("Created Server listening in port: "+port);
 		return server;
+	}
+	
+	public static Map<String, String> serverProperties(String fileName) {
+		Properties serverProperties = new Properties();
+		Map<String, String> serverMap = new HashMap<String, String>();
+		try {
+			serverProperties.load(new FileInputStream(new File(fileName)));
+			serverProperties.putAll(serverMap);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return serverMap;
+	}
+	
+	public static void getPropertiesInstance() {
+		
 	}
 	
 	public static IServerStateContext getServerContext(EServerState state) {
