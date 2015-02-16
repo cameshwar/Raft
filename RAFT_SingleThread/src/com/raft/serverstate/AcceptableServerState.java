@@ -46,7 +46,7 @@ public class AcceptableServerState implements IServerStateContext {
 							.hasNext();) {				
 						SelectionKey key = i.next();
 						i.remove();				
-						if (key.isAcceptable()) {
+						if (key.isValid() && key.isAcceptable()) {
 							// accept connection
 							ServerSocketChannel acceptServer = (ServerSocketChannel) key
 									.channel();	
@@ -64,9 +64,9 @@ public class AcceptableServerState implements IServerStateContext {
 											: SelectionKey.OP_WRITE);							
 						}
 					}
-				} catch(CancelledKeyException e){
+				} /*catch(CancelledKeyException e){
 					
-				} catch (SocketException e) {
+				}*/ catch (SocketException e) {
 					// TODO Auto-generated catch block
 					//e.printStackTrace();
 				} catch (ClosedChannelException e) {
