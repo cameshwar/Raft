@@ -59,6 +59,7 @@ public class ReadableServerState implements IServerStateContext{
 					while(true) {
 					if(close) {
 						close = false;
+						if(client!=null) client.close();
 						break;
 					}
 					selector.select();
@@ -109,8 +110,8 @@ public class ReadableServerState implements IServerStateContext{
 	@Override
 	public void closeConnection(ServerStateNode server) {
 		this.close = true;
-		if(!close)
-			server.destroy();
+		while(!close);
+		server.destroy();
 	}
 
 	

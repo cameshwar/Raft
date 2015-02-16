@@ -124,7 +124,7 @@ public class CandidateState implements IMachineContext{
 			}
 		}
 		timer.setShutTimer(true);
-		MachineState.setMachineState(EMachineState.LEADER);
+		MachineState.setMachineState(EMachineState.FOLLOWER);
 		//resetServerStates();
 	}
 

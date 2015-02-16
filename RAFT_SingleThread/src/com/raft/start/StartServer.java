@@ -23,7 +23,7 @@ public class StartServer {
 	public void startServer(final Map<Integer, ServerStateNode> portServerMap) {
 		for(final Integer port: portServerMap.keySet()) {
 			//new Thread(portServerMap.get(port), "Server:"+port).start();
-			new Thread() {
+			/*new Thread() {
 				@Override
 				public void run() {					
 					startServerState();
@@ -33,7 +33,8 @@ public class StartServer {
 					//while(MachineState.serverState.changeServerState(ServerUtils.getServerContext(), portServerMap.get(port)));
 					ServerUtils.getServerContext(EServerState.ACCEPT).changeState(portServerMap.get(port));
 				}
-			}.start();
+			}.start();*/
+			ServerUtils.getServerContext(EServerState.ACCEPT).changeState(portServerMap.get(port));
 		}
 			
 	}

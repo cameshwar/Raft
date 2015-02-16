@@ -49,6 +49,7 @@ public class WritableServerState implements IServerStateContext {
 					while (true) {
 						if(close) {
 							close = false;
+							client.close();
 							break;
 						}
 						selector.select();
@@ -95,7 +96,7 @@ public class WritableServerState implements IServerStateContext {
 	@Override
 	public void closeConnection(ServerStateNode server) {
 		this.close = true;
-		if(!close)
-			server.destroy();		
+		while(!close);
+		server.destroy();		
 	}
 }
