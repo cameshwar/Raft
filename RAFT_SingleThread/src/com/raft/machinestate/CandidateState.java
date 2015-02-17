@@ -28,7 +28,14 @@ public class CandidateState implements IMachineContext{
 	
 	private int noOfVotes = 0;
 	
+	private boolean rcvdLeaderMsg = false;
+	
 	private CandidateState() {
+	}
+	
+	public void setRcvdLeaderMsg(boolean rcvdLeaderMsg) {
+		if(!this.rcvdLeaderMsg)
+			this.rcvdLeaderMsg = rcvdLeaderMsg;
 	}
 	
 	public static IMachineContext getMachineContext() {
@@ -87,6 +94,7 @@ public class CandidateState implements IMachineContext{
 							//bCastMsgs1.add(IRaftConstants.FOLLOWER_WRITE_PORT);
 							new Thread(new ClientNode(bCastMsgs2, "READ"), "Thread 1").start();
 							while(!CandidateState.readableServer.isReady());
+							setRcvdLeaderMsg(true);
 							noOfVotes++;
 							System.out.println("votes "+noOfVotes);
 						}
@@ -124,7 +132,8 @@ public class CandidateState implements IMachineContext{
 			}
 		}
 		timer.setShutTimer(true);
-		MachineState.setMachineState(EMachineState.LEADER);
+		MachineState.setMachineState(this.rcvdLeaderMsg?EMachineState.FOLLOWER:EMachineState.LEADER);
+		this.rcvdLeaderMsg = false;
 		//resetServerStates();
 	}
 

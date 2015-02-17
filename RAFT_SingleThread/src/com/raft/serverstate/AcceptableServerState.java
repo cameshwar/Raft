@@ -54,7 +54,9 @@ public class AcceptableServerState implements IServerStateContext {
 								close = false;
 								if(client!=null) client.close();
 								break;
-							}							
+							}
+							if(acceptServer.socket().isClosed())
+								break;
 							client = acceptServer.accept();
 							client.configureBlocking(false);
 							client.socket().setTcpNoDelay(true);
@@ -68,13 +70,13 @@ public class AcceptableServerState implements IServerStateContext {
 					
 				}*/ catch (SocketException e) {
 					// TODO Auto-generated catch block
-					//e.printStackTrace();
+					e.printStackTrace();
 				} catch (ClosedChannelException e) {
 					// TODO Auto-generated catch block
-					//e.printStackTrace();
+					e.printStackTrace();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					//e.printStackTrace();
+					e.printStackTrace();
 				}
 				
 			}
